@@ -1,0 +1,95 @@
+<html>
+<body>
+
+<h1>exploRase</h1>
+<h2>On its way...</h2>
+
+<TABLE WIDTH=95% CELLPADDING=0 CELLSPACING=20 BORDER=0>
+<TR>
+<TD valign=top align=center width=160>
+<H4><a href="index.html">overview</a></H4>
+<BR>
+<H4><a href="started.html">getting started</a></H4>
+<BR>
+<H4>[ download ]</H4>
+<BR>
+<H4><a href="docs.html">documentation</a></H4>
+<BR>
+<H4><a href="gallery.html">screenshots</a></H4>
+<BR>
+</TD><TD COLSPAN=3 VALIGN=TOP>
+
+<h3>Getting exploRase</h3>
+
+The installation of exploRase depends on your operating system.
+exploRase has several dependencies, so please make sure that you download 
+and install all of items listed below.
+
+<h3>Windows</h3>
+<p>Please download the following components 
+and follow the instructions for each:</p>
+
+<ul>
+<li><a href="http://gladewin32.sourceforge.net/modules/wfdownloads/visit.php?lid=99">GTK+</a>: 
+Run the downloaded file and follow the prompts.</li>
+<li><a href="http://rh-mirror.linux.iastate.edu/CRAN/bin/windows/base/R-2.3.1-win32.exe">R</a>: 
+Run the downloaded file and follow the prompts.</li>
+<li><a href="http://www.ggobi.org/downloads/ggobi_2.1.2.exe">ggobi</a>: 
+Run the downloaded file and follow the prompts.</li>
+<li><a href="http://www.ggobi.org/downloads/rggobi_2.1.2.zip">rggobi</a>: 
+Start R, select menu option <code>Packages/Install From Local Zip Files</code>. 
+Select the file you downloaded for rggobi.</li>
+<li><a href="http://www.ggobi.org/rgtk2">RGtk2</a>: Start R, selet menu option 
+<code>Packages/Install package(s)</code>, select a CRAN mirror, and then choose
+the <code>RGtk2</code> package.</li>
+<li><a href="explorase_0.6.zip">exploRase</a>: Start R, select menu option 
+<code>Packages/Install From Local Zip Files</code>. 
+Select the file you downloaded for exploRase.</li>
+</ul>
+
+<h3>Mac OS X</h3>
+<p>Please download the following components 
+and follow the instructions for each:</p>
+
+<ul>
+<li><a href="http://rh-mirror.linux.iastate.edu/CRAN/bin/macosx/powerpc/R-2.2.1.dmg">R</a>: 
+This is R 2.2.1, because the universal binary in R 2.3+ currently causes complications.
+Also, this only works with ppc Macs. We will soon support Intel Macs as well.
+Run the downloaded file and follow the prompts.</li>
+<li><a href="http://www.ggobi.org/">ggobi</a>: 
+Please follow the instructions on the GGobi site for installing GGobi on a Mac.
+This includes installing GGobi's dependencies like GTK+.</li>
+<li><a href="http://www.ggobi.org/downloads/rggobi_2.1.3.tar.gz">rggobi</a>:
+Type the following on one line at a console in the directory where you placed the rggobi package.
+<code>PKG_CONFIG_PATH=/usr/local/lib/pkgconfig R CMD INSTALL rggobi_2.1.3.tar.gz</code></li>
+<li><a href="http://www.ggobi.org/rgtk2">RGtk2</a>: Get this off of CRAN.</li>
+<li><a href="explorase_0.6.tar.gz">exploRase</a>: Install in the normal you way
+install a downloaded R package.</li>
+</ul>
+
+<h3>Linux</h3>
+<p>Thank you for making my life easier. Please download the following components 
+and follow the instructions for each:</p>
+
+<ul>
+<li><a href="http://www.gtk.org/">GTK+</a>: This is included
+in your distribution and probably installed already. If not, please download and build from source.</li>
+<li><a href="http://www.r-project.org">R</a>: 
+Build it from source or get a package from your distribution.</li>
+<li><a href="http://www.ggobi.org/downloads/ggobi_2.1.2.tar.bz2">ggobi</a>: 
+Download the source, build and install. There is also a debian package available.
+Note that GGobi also needs <code>libxml2</code>, but this is probably already on your system.</li>
+<li><a href="http://www.ggobi.org/downloads/rggobi_2.1.3.tar.gz">rggobi</a>:
+Type the following on one line at a console in the directory where you placed the rggobi package.
+<code>PKG_CONFIG_PATH=/usr/local/lib/pkgconfig R CMD INSTALL rggobi_2.1.3.tar.gz</code></li>
+<li><a href="http://www.ggobi.org/rgtk2">RGtk2</a>: Get this off of CRAN.</li>
+<li><a href="explorase_0.6.tar.gz">exploRase</a>: Install in the normal you way
+install a downloaded R package.</li>
+</ul>
+
+</TD>
+</TR>
+</TABLE>
+
+</body>
+</html>

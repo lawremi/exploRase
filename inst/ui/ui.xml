@@ -1,0 +1,59 @@
+<ui>
+  <menubar name='MenuBar'>
+    <menu action='FileMenu'>
+      <menuitem action='OpenProject'/>
+		  <menuitem action='OpenFile'/>
+      <separator/>
+      <menuitem action='SaveProject'/>
+      <menu action='SaveMenu'>
+    	   <menuitem action='SaveEntityInfo'/>
+         <menuitem action='SaveEntityLists'/>
+      </menu>
+      <separator/>
+		  <menuitem action='Quit'/>
+    </menu>
+    <menu action='AnalysisMenu'>
+	  <menu action='InterestingEntsMenu'>
+	  	<menuitem action='Difference'/>
+		  <menuitem action='Regression'/>
+		  <menuitem action='Angle'/>
+		  <menuitem action='Mahalanobis'/>
+    </menu>
+    <menu action='SimilarEntsMenu'>
+      <menuitem action='Euclidean'/>
+      <menuitem action='CorrelationDistance'/>
+      <menuitem action='ZeroCorr'/>
+    </menu>
+    <menu action='ClusterMenu'>
+	  	<menuitem action='HClust'/>
+	  </menu>
+	    <menuitem action='Patterns'/>
+	  </menu>
+    <menu action='ModelingMenu'>
+      <menuitem action='Limma'/>
+      <menuitem action='Temporal'/>
+    </menu>
+    <menu action='DataMenu'>
+      <menu action='ImportEntityInfoMenu'/>
+      <menuitem action='SubsetData'/>
+      <separator/>
+      <menuitem action='AverageReplicates'/>
+      <menuitem action='MedianReplicates'/>
+      <menuitem action='StdDevReplicates'/>
+    </menu>
+    <menu action='GraphicsMenu'>
+      <menuitem action='Parcoords'/>
+      <menuitem action='Scatmat'/>
+    </menu>
+  </menubar>
+  <toolbar name="ToolBar">
+    <toolitem action="OpenProject"/>
+    <separator/>
+    <toolitem action="ClearColors"/>
+    <toolitem action="SyncColors"/>
+    <separator/>
+    <toolitem action="QuerySources"/>
+    <separator/>
+    <toolitem action="CreateEntityList"/>
+  </toolbar>
+</ui>

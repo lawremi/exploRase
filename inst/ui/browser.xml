@@ -1,0 +1,9 @@
+<ui>
+	<toolbar name="Toolbar">
+  		<toolitem name="Back" action="BrowserBack"/>
+		<toolitem name="Forward" action="BrowserForward"/>
+		<toolitem name="Refresh" action="BrowserRefresh"/>
+		<toolitem name="Home" action="BrowserHome"/>
+		<toolitem name="Stop" action="BrowserStop"/>
+	</toolbar>
+</ui>
