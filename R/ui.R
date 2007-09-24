@@ -85,8 +85,6 @@ configureViewColumns <- function(treeView, cols)
 # 'keyword' will link columns to the context-sensitive help
 configureViewColumn <- function(column, sort_col = -1, removable = T, 
   desc = column$getTitle(), keyword = desc) {
-  # a hack to make sure the columns end up the right size during auto-sizing
-  #gSignalConnect(column, "notify::width", viewColumnWidth_cb)
   
   column$setReorderable(TRUE)
 	column$setResizable(TRUE)
@@ -94,13 +92,21 @@ configureViewColumn <- function(column, sort_col = -1, removable = T,
   column$setData("keyword", keyword)
   column$setData("removable", removable)
 
-  hBox <- gtkHBox()
+  # serious GtkTreeView wizardry follows
   label <- gtkLabel(column$getTitle())
-  label$setMaxWidthChars(12)
-  hBox$packStart(label, T, F, 0)
   label$setEllipsize("end")
-  column$setWidget(hBox)
-  .exp$getTooltips()$setTip(label, desc, keyword)
+  label["xalign"] <- 0
+  column$setWidget(label)
+  alignment <- label$getParent()
+  alignment["xscale"] <- 1
+  gSignalConnect(alignment, "notify::xscale", function(alignment, pspec)
+  {
+    if (alignment["xscale"] != 1)
+      alignment["xscale"] <- 1
+  })
+  button <- alignment$getParent()$getParent()
+  .exp$getTooltips()$setTip(button, desc, keyword)
+  # wizardry concluded
   
   if (sort_col != -1) {
     column$setSortColumnId(sort_col-1)
@@ -159,7 +165,12 @@ exp_showResults <- function(results, label, sublabels = "", types = exp_entityTy
 errorDialog <- function(..., parent = getMainWindow())
 {
 	dialog <- gtkMessageDialog(parent, "destroy-with-parent", "error", "close", ...)
-    gSignalConnect(dialog, "response", gtkWidgetDestroy)
+  gSignalConnect(dialog, "response", gtkWidgetDestroy)
+}
+warningDialog <- function(..., parent = getMainWindow())
+{
+	dialog <- gtkMessageDialog(parent, "destroy-with-parent", "warning", "close", ...)
+  gSignalConnect(dialog, "response", gtkWidgetDestroy)
 }
 
 ###################### Misc utilities #######################

@@ -18,7 +18,7 @@ designDetailsButton_cb <- function(w, u = NULL)
    designViewWindow()$show()
 }
 
-designViewWindow <-function(exp.info, parent = mainWindow)
+designViewWindow <-function(exp.info, parent = .exp$getMainWindow())
 {
   expViewWindow <- gtkWindow("toplevel", show = F)
   expViewWindow$setTitle("exploRase : Experimental design details")
@@ -88,9 +88,10 @@ syncDesignInfo <- function() {
 # @arguments the type of entity to which this design applies. This links
 # the design to the experimental data and entity information.
 # @keyword manip
-exp_loadDesign <- function(design_info, ent_type = exp_entityType()) {	
-  if (colnames(design_info)[1] != "ID")
-    design_info <- cbind(ID=rownames(design_info), design_info)
+exp_loadDesign <- function(design_info, ent_type = exp_entityType()) {
+  # force first column name to be ID
+  #if (colnames(design_info)[1] != "ID")
+  #  design_info <- cbind(ID=rownames(design_info), design_info)
   #design_model <- designModel(design_info)
   #.exp$setDesignModel(design_model, ent_type)
   #getDesignView()$setModel(design_model)

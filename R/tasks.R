@@ -47,47 +47,47 @@ finishTask <- function() {
 }
 
 ####################### Experimental AOP-style progress reporting ############
-startTask <- function(ops, name) 
-{
-  # override the caller's environment
-  caller <- sys.function(sys.parent())
-  env <- new.env(environment(caller))
-  environment(caller) <- env
-  # set busy cursor
-  cursor <- gdkCursorNew("watch")
-  getMainWindow()[["window"]]$setCursor(cursor)
-  # configure status bar
-  sBar <- getStatusBar()
-  taskBar <- sBar[[1]]
-  taskId <- taskBar$getContextId("task")
-  taskBar$push(taskId, paste("Task:", name))
-  opBar <- sBar[[2]]
-  opId <- opBar$getContextId("op")
-  opProgress <- sBar[[3]]
-  # install interceptors
-  sapply(ops, function(op) {
-    fun <- get(op$fun, env)
-    environment(fun) <- env
-    assign(op$fun, function(...) {
-      opBar$push(opId, paste("Op:",op$name))
-      desc <- op$description
-      if (is.function(desc))
-        desc <- desc(...)
-      opProgress$setText(desc)
-      retval <- fun(...)
-      weight <- op$weight
-      if (is.function(weight))
-        weight <- weight(...)
-      opProgress$setFraction(opProgress$getFraction() + weight)
-      opBar$pop(opId)
-      return(retval)
-    }, env)
-  })
-}
-stopTask <- function()
-{
-  getStatusbar()[[1]]$pop(taskBar$getContextId("task"))
-  getMainWindow()[["window"]]$setCursor(NULL)
-  caller <- sys.function(sys.parent())
-  environment(caller) <- parent.env(environment(caller))
-}
+#startTask <- function(ops, name) 
+#{
+#  # override the caller's environment
+#  caller <- sys.function(sys.parent())
+#  env <- new.env(environment(caller))
+#  environment(caller) <- env
+#  # set busy cursor
+#  cursor <- gdkCursorNew("watch")
+#  getMainWindow()[["window"]]$setCursor(cursor)
+#  # configure status bar
+#  sBar <- getStatusBar()
+#  taskBar <- sBar[[1]]
+#  taskId <- taskBar$getContextId("task")
+#  taskBar$push(taskId, paste("Task:", name))
+#  opBar <- sBar[[2]]
+#  opId <- opBar$getContextId("op")
+#  opProgress <- sBar[[3]]
+#  # install interceptors
+#  sapply(ops, function(op) {
+#    fun <- get(op$fun, env)
+#    environment(fun) <- env
+#    assign(op$fun, function(...) {
+#      opBar$push(opId, paste("Op:",op$name))
+#      desc <- op$description
+#      if (is.function(desc))
+#        desc <- desc(...)
+#      opProgress$setText(desc)
+#      retval <- fun(...)
+#      weight <- op$weight
+#      if (is.function(weight))
+#        weight <- weight(...)
+#      opProgress$setFraction(opProgress$getFraction() + weight)
+#      opBar$pop(opId)
+#      return(retval)
+#    }, env)
+#  })
+#}
+#stopTask <- function()
+#{
+#  getStatusbar()[[1]]$pop(taskBar$getContextId("task"))
+#  getMainWindow()[["window"]]$setCursor(NULL)
+#  caller <- sys.function(sys.parent())
+#  environment(caller) <- parent.env(environment(caller))
+#}

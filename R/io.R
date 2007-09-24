@@ -101,9 +101,9 @@ genPatterns <- function()
   type_names <- names(types)
   types <- sub("s$", "", types)
   p <- paste("*", c(paste(type_names, "data", sep="."), paste(type_names, "info", sep="."),
-    paste(type_names, "design", sep="."), "list"), sep=".")
+    paste(type_names, "design", sep="."), "list", "net"), sep=".")
   p_names <- c(paste(types, "data"), paste(types, "annotations"), 
-    paste(types, "exp. design"), "Entities of interest")
+    paste(types, "exp. design"), "Entities of interest", "SBML Network")
   names(p) <- p_names
   p
 }
@@ -119,7 +119,7 @@ MnuOpenFile_cb <- function(w, u) {
 
 # just for convenience - adds a cancel and open button to dialog
 # this also accepts a set of patterns to convert to filters
-fileOpenDialog <- function(title, patterns = c(All = "*"), parent = mainWindow)
+fileOpenDialog <- function(title, patterns = c(All = "*"), parent = getMainWindow())
 {
 	d <- gtkFileChooserDialog(title, parent, "open", "gtk-cancel", GtkResponseType["cancel"],
 		"gtk-open", GtkResponseType["accept"])
@@ -136,13 +136,13 @@ fileOpenDialog <- function(title, patterns = c(All = "*"), parent = mainWindow)
   d
 }
 # just for convenience - adds a cancel and save button to dialog
-fileSaveDialog <- function(title, parent = mainWindow)
+fileSaveDialog <- function(title, parent = getMainWindow())
 {
 	gtkFileChooserDialog(title, parent, "save", "gtk-cancel", GtkResponseType["cancel"],
 		"gtk-save", GtkResponseType["accept"])
 }
 # creates a dialog for selecting a folder
-folderSelectDialog <- function(title, mode = "open", parent = mainWindow)
+folderSelectDialog <- function(title, mode = "open", parent = getMainWindow())
 {
 	gtkFileChooserDialog(title, parent, "select-folder", "gtk-cancel", GtkResponseType["cancel"],
 		paste("gtk", mode, sep="-"), GtkResponseType["accept"])
@@ -162,6 +162,13 @@ exp_loadProject <- function(project)
 {
   assert(file.info(project)[,"isdir"] == T, "Please choose a directory")
   exp_loadFiles(dir(project, full.names=T))
+}
+
+# heuristic to check if format is csv (as opposed to eg tsv)
+formatCheck <- function(d, type = "matrix") {
+  if (ncol(d) < 2)
+    warningDialog("Only ", ncol(d), " columns in ", type, 
+      " - is file in CSV (comma-separated value) format?")
 }
 
 # Load files
@@ -188,33 +195,45 @@ exp_loadFiles <- function(filenames, data_type, entity_type = "gene")
   else file_matrix <- cbind(filenames, entity_type, data_type)
   printTask("Loading files")
   printOp("Loading entity lists...")
-  exp_loadLists(lapply(file_matrix[file_matrix[,3] == "list",1], read.csv))
-  addProgress(25)
+  exp_loadLists(lapply(file_matrix[file_matrix[,3] == "list",1], read.csv, row.names = NULL))
+  addProgress(20)
   info_files <- file_matrix[file_matrix[,3] == "info",1]
-  inc <- 25 * 1 / length(info_files)
+  inc <- 20 * 1 / length(info_files)
   sapply(info_files, function(f) {
     ent_type <- as.character(file_matrix[f, 2])
     printOp("Loading", ent_type, "information...")
-    exp_loadInfo(read.csv(f), ent_type)
+    d <- read.csv(f, row.names = NULL)
+    formatCheck(d, "entity information")
+    exp_loadInfo(d, ent_type)
     addProgress(inc)
   })
   design_files <- file_matrix[file_matrix[,3] == "design",1]
-  inc <- 25 * 1 / length(design_files)
+  inc <- 20 * 1 / length(design_files)
   sapply(design_files, function(f) {
     ent_type <- as.character(file_matrix[f, 2])
     printOp("Loading", ent_type, "design...")
-    exp_loadDesign(read.csv(f), ent_type)
+    d <- read.csv(f, row.names = NULL)
+    formatCheck(d, "design information")
+    exp_loadDesign(d, ent_type)
     addProgress(inc)
   })
   data_files <- file_matrix[file_matrix[,3] == "data",1]
-  inc <- 25 * 1 / length(data_files)
+  inc <- 20 * 1 / length(data_files)
   sapply(data_files, function(f) {
     ent_type <- as.character(file_matrix[f, 2])
     printOp("Loading", ent_type, "data...")
-    exp_loadData(read.table(f, row.names=1, header=T, sep=","), 
-      sub("\\.data$", "", basename(f)), ent_type)
+    d <- read.table(f, row.names=1, header=T, check.names = FALSE, sep=",")
+    formatCheck(d, "experimental data")
+    exp_loadData(d, sub("\\.data$", "", basename(f)), ent_type)
     addProgress(inc)
   })
+  #network_files <- file_matrix[file_matrix[,3] == "net",1]
+  #inc <- 20 * 1 / length(network_files)
+  #printOp("Loading network data...")
+  #sapply(network_files, function(f) {
+  #  exp_loadNetwork(rsbml_read(f), sub("\\.net$", "", basename(f)))
+  #  addProgress(inc)
+  #})
   clearTask()
 }
 

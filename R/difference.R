@@ -113,6 +113,24 @@ MnuCorr_cb<- function(w, u = NULL)
    finishTask()
 }
 
+MnuCanberra_cb<- function(w, u = NULL)
+{
+   samples <- exp_designSelection()
+   ents <- exp_entitySelection()
+   
+   assert(length(ents) == 1 && length(samples) > 0, "Please select one entity and at least one sample")
+   
+   samples <- sort(samples)
+   printTask("Calculating Canberra distance")
+   printOp("Calculating canberra distance for", ents[1], "across", paste(samples, collapse=", "))
+   dataset <- exp_dataset()[,samples,drop=F]
+   can_dist <- exp_calcCanberraDist(dataset, ents)
+   addProgress(50)
+   
+   exp_showResults(can_dist, "canberra", samples)
+   finishTask()
+}
+
 MnuZerocorr_cb<- function(w, u = NULL)
 {
    samples <- exp_designSelection()
@@ -220,4 +238,17 @@ exp_calcZeroCorDist <- function(ent_data, ent) {
                       (sqrt(apply(select.x*select.x,1,sum))*
                          sqrt(apply(ent_data*ent_data,1,sum)))
     Zerocordist
+}
+
+# Calculate canberra distance
+# Calculates canberra distance between \code{ent} and the 
+# other entities across the samples (columns) in the data frame \code{ent_data}
+# @arguments a data frame of experimental data, according to exploRase conventions
+# @arguments the id of an entity that is compared to the entities in \code{ent_data}
+# @keyword arith
+exp_calcCanberraDist <- function(ent_data, ent) {
+  selected <- as.matrix(ent_data[ent,])
+  ent_mat <- as.matrix(ent_data)
+  selected_mat <- matrix(rep(selected, nrow(ent_data)), ncol=ncol(ent_data), byrow=T)
+  rowSums(abs(ent_mat - selected_mat) / (abs(ent_mat) + abs(selected_mat)))
 }

@@ -20,12 +20,18 @@
 		  <menuitem action='Mahalanobis'/>
     </menu>
     <menu action='SimilarEntsMenu'>
+      <menuitem action='ZeroCorr'/>
       <menuitem action='Euclidean'/>
       <menuitem action='CorrelationDistance'/>
-      <menuitem action='ZeroCorr'/>
+      <menuitem action='Canberra'/>
     </menu>
     <menu action='ClusterMenu'>
-	  	<menuitem action='HClust'/>
+	  	<menu action='HClust'>
+        <menuitem action='HClustAngle'/>
+        <menuitem action='HClustEuc'/>
+        <menuitem action='HClustCor'/>
+        <menuitem action='HClustCan'/>
+      </menu>
 	  </menu>
 	    <menuitem action='Patterns'/>
 	  </menu>

@@ -1,6 +1,6 @@
 ################# Modeling GUI frontends ###################
 
-temporalWindow <- function(parent = mainWindow)
+temporalWindow <- function(parent = getMainWindow())
 {
   window <- gtkWindow("toplevel", show = F)
   window$setTitle("Temporal modeling")
@@ -77,7 +77,7 @@ temporalWindow <- function(parent = mainWindow)
   window
 }
 
-limmaWindow <- function(parent = mainWindow)
+limmaWindow <- function(parent = getMainWindow())
 {
   assert(require(limma), "You need the limma package for this functionality")
   
@@ -257,12 +257,14 @@ applyLimma_cb <- function(wid, user_data)
   trueFactors <- factors[factors %in% exp_designFactors()]
   design <- exp_designFrame()
   dataset <- exp_dataset()
-  if ("replicate" %in% colnames(design)) {
-    dataset <- dataset[,!is.na(design[,"replicate"])]
-    design <- design[!is.na(design[,"replicate"]),]
-  }
   selected_conds <- exp_designSelection()
-  if (length(selected_conds) > 0) {
+  if ("replicate" %in% colnames(design)) {
+    real <- !is.na(design[,"replicate"])
+    dataset <- dataset[,real]
+    design <- design[real,]
+    selected_conds <- selected_conds[selected_conds %in% rownames(design)]
+  }
+  if (length(selected_conds) > 1) {
     design <- design[match(selected_conds,design[,"ID"]),]
     dataset <- dataset[,selected_conds]
   }
@@ -273,7 +275,8 @@ applyLimma_cb <- function(wid, user_data)
   # make sure the design matrix matches up with the levels of the interactions
   design <- design[sorted_ints,]
   dups <- duplicated(ints[sorted_ints])
-  assert(any(dups), "Your model is fully specified and thus pointless")
+  assert(any(dups), 
+    "Model over-specified, please select a different (larger) set of conditions")
   model_matrix <- model.matrix(~0+ints)[,table(ints) > 0]
   
   # across all samples for now

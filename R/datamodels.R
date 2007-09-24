@@ -4,9 +4,7 @@
 mergeInfo <- function(old_info, info, def = NULL)
 {
 	info <- as.data.frame(info)
-	#if (nrow(info) == 0)
-	#	return()
-	
+  
 	# remove white space
 	info[,1] <- gsub(" ", "", as.character(info[,1]))
 	

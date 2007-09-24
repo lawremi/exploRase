@@ -2,7 +2,7 @@
    # Gene Gobi Tree - to be replaced by something not based on R graphics
    ##############################
 
-ggobiTreeWindow <- function(selectNode_cb, parent = mainWindow) {
+ggobiTreeWindow <- function(selectNode_cb, parent = getMainWindow()) {
     win <- gtkWindow("toplevel", show = F)
     win$setTitle("GGobi-Dendogram")
     win$setTransientFor(parent)
@@ -144,7 +144,7 @@ gobitreepl <- function (xy, node, erase = FALSE, ...)
     list(x = x, y = y)
 }
 
-color.click.dn <- function( c.hclust, ids, data, .gobi=getDefaultGGobi() )
+color.click.dn <- function( c.hclust, ids, data, .gobi=ggobi_get() )
   {
   tmp <- .dend.coords( c.hclust )
   c.n  <- length( c.hclust$order )
@@ -195,95 +195,6 @@ color.click.dn <- function( c.hclust, ids, data, .gobi=getDefaultGGobi() )
   exp_colorEntities(ids[descendants], 1)
   #setColors.ggobi(colors = rep(1, length(descendants)), 
   #                  which = show.help[high.list,1][descendants],.data="expression.GG")
-  }
-  
-  color.click.tr <- function( treeobj, data, setaxes=FALSE, n="NA", 
-                  .gobi=getDefaultGGobi() )
-  {
-
-  # Check to see if we have a node number. If not, get one
-  if(n == "NA")
-    {
-    # first, get the list of clickable coordinates, pare out the leaves
-    xcoord <- (gobitreeco(treeobj))$x
-    ycoord <- (gobitreeco(treeobj))$y
-    xcoord[treeobj$frame$var == "<leaf>"] <- "NA"
-    ycoord[treeobj$frame$var == "<leaf>"] <- "NA"
-    xcoord <- as.numeric(xcoord)
-    ycoord <- as.numeric(ycoord)
-
-    # get a mouse click event
-    dex<-identify(x=xcoord, y=ycoord, n=1, plot=FALSE)
-    
-    # This code will change as the interface between ggobi and R develops
-    nodenum <- as.numeric(rownames(treeobj$frame)[dex])
-    #  print(c("The node number clicked is ", nodenum))
-    }
-  else
-    {
-    nodenum <- n
-    }
-
-  # Check the setaxes option
-  if(setaxes==TRUE)
-    {
-    cat("Option 'setaxes' is not yet implemented", fill=TRUE)
-    # # find this node's variable name
-    # this.var <- as.character((treeobj$frame$var)[nodenum])
-    #
-    # # find the parent
-    # if(nodenum == 1) # This is the root node: no parent
-    #   parent.node <- nodenum * 2  # substitute in the left child's node #
-    # else
-    #   {
-    #   if( nodenum%%2 == 0 )
-    #     parent.node <- nodenum/2
-    #   else
-    #     parent.node <- (nodenum-1)/2
-    #   }
-    # 
-    # # find parent's variable name
-    # that.var <- as.character((treeobj$frame$var)[parent.node] )
-    #
-    # # set the mode
-    # setMode.ggobi("XYPlot", .gobi=.gobi)
-    #
-    # # set the axes
-    # setPlotVariables.ggobi(this.var, that.var)
-    }
-  left.child <- nodenum * 2
-  right.child <- nodenum*2 + 1
-
-  # Now, we use the matrix that was passed in, and make a 
-  # new tree, snipped at the appropriate places. Then we use that 
-  # smaller tree to predict everything in the data set, and 
-  # color the ones that appear at the sides of the node clicked
-  smtree <- snip.tree(treeobj, nodes=c(left.child, right.child))
-  smpreds <- predict(smtree, data, type="where")
-
-  left.child.dex <- match(left.child, 
-       as.numeric(row.names(smtree$frame)))
-  right.child.dex <- match(right.child, 
-       as.numeric(row.names(smtree$frame)))
-
-  left.obs <- index(left.child.dex, smpreds)
-  right.obs <- index(right.child.dex, smpreds)
-
-  setColors.ggobi(colors = rep(7, length(smpreds)), 
-                                     which=1:length(smpreds))
-  setColors.ggobi(colors = rep(2, length(left.obs)), which=left.obs)
-  setColors.ggobi(colors = rep(9, length(right.obs)), which=right.obs)
-  
-  } #closes function
-
-
-  color.node.tr <- function(treeobj, data, nodenum, .gobi=getDefaultGGobi())
-  {
-  
-  # This is exactly the same as color.click, except the node number is 
-  # passed in as an argument
-  color.click.tr(treeobj=treeobj, data=data, n=nodenum, .gobi=.gobi)
-
   }
   
   .dend.coords <- function( c.hclust )
@@ -343,75 +254,6 @@ color.click.dn <- function( c.hclust, ids, data, .gobi=getDefaultGGobi() )
   
   # ... and the setup is complete
 #  return(gobi.instance)
-  }
-  
-  setup.gobitree <- function(treeobj, data)
-  {
-  # a little housecleaning:
-  par(mfrow=c(1,1))
-  
-  # First, plot the tree using the gobi.plot.tree routine 
-  # stolen from the tree library.
-  gobi.plot.tree (treeobj)
-  
-  # here is a vector of node numbers That is, if the 5th elem is "1", then the
-  # fifth line of the $frame has info for node number 1.
-  node <- as.numeric(row.names(treeobj$frame))
-  
-  # Here, we have coordinates for plotting the nodes. This depends on the 
-  # function gobitreeco found elsewhere in the library.
-  xcoord <- (gobitreeco(treeobj))$x
-  ycoord <- (gobitreeco(treeobj))$y
-  xcoord[treeobj$frame$var == "<leaf>"] <- "NA"
-  ycoord[treeobj$frame$var == "<leaf>"] <- "NA"
-  xcoord <- as.numeric(xcoord)
-  ycoord <- as.numeric(ycoord)
-  
-  # draw the points as big squares, big enough to click on
-  points(xcoord, ycoord, pch=15, cex=1.7)
-  
-  #Now, for the variable labels. These appear just below the nodes themselves
-  #Note that we remove the labels for the <leaf> nodes
-  label.x <- xcoord  # no change in x position
-  label.y <- ycoord - (par("cxy"))[2] # Move down by one line of text
-  label.x[treeobj$frame$var == "<leaf>"] <- "NA"
-  label.y[treeobj$frame$var == "<leaf>"] <- "NA"
-  
-  par(adj=0.5)  # Center the text 
-  text(x=as.numeric(label.x), y=as.numeric(label.y), 
-                 labels=as.character(treeobj$frame$var))
-
-  # Now, define indeces for the children of each node. That is, if 
-  # leftchild[3] 
-  # is a 6, then the info for the left child of the node described in row 3 
-  # is described in row 6. There are no node numbers here, 
-  # just location indeces
-  leftchild <- match(node*2, node)
-  rightchild <- match((node * 2 + 1), node)
-  
-  # Now, to put the labels on each side of the node, we define the x location 
-  # of the text: between the node and it's child. We define one set of 
-  # locations
-  # for the left children, and one set for the right. The y locations are the
-  # same for both sets: a bit above the location of the node.
-  # If a node has no left or right leaf, the coords are NA from above
-  split.left.x <- (xcoord + xcoord[leftchild] ) / 2
-  split.right.x <- (xcoord + xcoord[rightchild] ) / 2
-  split.both.y <- ycoord + (par("cxy")[2])*0.7
-  
-  # Put in the actual text for the points
-  text(x=as.numeric(split.left.x), y=as.numeric(split.both.y), 
-           label=as.character(treeobj$frame$splits[,1]))
-  text(x=as.numeric(split.right.x), y=as.numeric(split.both.y), 
-           label=as.character(treeobj$frame$splits[,2]))
-  
-  # Now that the R window is done, we need to start up a ggobi window.
-  gobi.instance <- ggobi(data)
-  scatterplot.ggobi(1, 2)
-  
-  # and that finishes the setup. 
-
-  return(gobi.instance)
   }
   
   index <- function (val, vec) 

@@ -17,7 +17,7 @@
 # @keyword manip
 exp_loadData <- function(exp_data, data_name = "expression", ent_type = "gene", sync = F) {
   assert(length(dim(exp_data)) == 2, "Experimental data must be bidimensional")
-	
+  
   gg <- exp_ggobi()
 	gg[data_name] <- exp_data # load data into our ggobi instance
   .exp$setGobiset(gg[data_name], ent_type) # hold the reference

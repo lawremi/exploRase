@@ -40,7 +40,10 @@ exp_addEntityType <- function(ent_type, label = paste(ent_type, "s", sep="")) {
   .exp$setEntityView(entView, ent_type)
   .exp$setFilterModel(filterModel(), ent_type)
   filtView <- filterView(ent_type)
-  .exp$getEntityBook()$appendPage(entityPage(entView, filtView), gtkLabel(label))
+  columnView <- columnView(entView)
+  searchBar <- searchBar(entView)
+  .exp$getEntityBook()$appendPage(entityPage(entView, filtView, columnView, searchBar), 
+    gtkLabel(label))
 }
 
 setEntityType <- function(ent_type, turn_page = T) {
@@ -105,22 +108,23 @@ syncEntityInfo <- function() {
 
 ################### The entity info view ####################
 
-entityPage <- function(entView, filterView) 
+entityPage <- function(entView, filterView, columnView, searchBar) 
 {
-  vbox <- gtkVBox(FALSE, 0)
+  vbox <- gtkVBox(FALSE, 3)
   entityScroll <- scrollView(entView)
-  expander <- gtkExpander("Filter")
-  # requires GTK 2.10
-  #settings <- expander$getSettings()
-  #settings$set(gtk_enable_animations = F)
-  expander$add(filterView)
-  vbox$packStart(expander, FALSE, FALSE, 0)
+  filter <- gtkExpander("Filter")
+  filter$add(filterView)
+  vbox$packStart(filter, FALSE, FALSE, 0)
+  columns <- gtkExpander("Hide/Show Columns")
+  columns$add(scrollView(columnView))
+  vbox$packStart(columns, FALSE, FALSE, 0)
+  vbox$packStart(searchBar, FALSE, FALSE, 0)
   vbox$packStart(entityScroll, TRUE, TRUE, 0)
   vbox
 }
 
 # highlights (selects) rows in an entity info view
-highlightEntities <- function(ents, ent_type) {
+highlightEntities <- function(ents, ent_type, scroll = FALSE) {
   entView <- getEntityView(ent_type)
   sel <- entView$getSelection()
   entModel <- getEntityModel(ent_type)
@@ -131,8 +135,11 @@ highlightEntities <- function(ents, ent_type) {
 	#mapped_ind <- mapping[ents]
   mapped_ind <- match(entModel[ents,"ID"], entView$getModel()[,"ID"])
   # End Mapping
-	sapply(mapped_ind[!is.na(mapped_ind)], function(ind) 
+  mapped_ind <- mapped_ind[!is.na(mapped_ind)]
+	sapply(mapped_ind, function(ind) 
     sel$selectPath(gtkTreePathNewFromIndices(ind-1)))
+  if (length(mapped_ind) && scroll)
+    entView$scrollToCell(gtkTreePathNewFromIndices(mapped_ind[1]-1), use.align=TRUE)
 }
 
 # builds a entity info view for a model that must adhere to the same format
@@ -159,7 +166,6 @@ entityView <- function(model)
   colorCol$setFixedWidth(60)
   entView$insertColumn(colorCol, 0)
 	entView$setEnableSearch(TRUE)
-	entView$setSearchColumn(3) # search on the ID
 	entView
 }
 
@@ -324,6 +330,109 @@ getEntityModels <- function() .exp$getEntityModels()
 getEntityModel <- function(ent_type = exp_entityType()) 
   getEntityModels()[[ent_type]]
 
+
+### GUI for hiding and showing columns in the entity info view ###
+
+columnModel <- function(ent_view)
+{
+  cols <- ent_view$getColumns()
+  model <- gtkListStore("logical", "character", "GtkTreeViewColumn")
+  model_row <- function(col) {
+    iter <- model$append()$iter
+    model$set(iter, 0, col$getVisible(), 1, col$getTitle(), 2, col)
+  }
+  sapply(cols, model_row)
+  model
+}
+updateColumnView <- function(col_view, ent_view)
+{
+  col_view$setModel(columnModel(ent_view))
+}
+visibleRendererToggled_cb <- function(renderer, path_str, col_view)
+{
+  model <- col_view$getModel()
+  path <- gtkTreePathNewFromString(path_str)
+  iter <- model$getIter(path)$iter
+  active <- model$get(iter, 0)[[1]]
+  col <- model$get(iter, 2)[[1]]
+  col$visible <- !active
+  model$set(iter, 0, !active)
+  model$rowChanged(path, iter)
+}
+#debug(visibleRendererToggled_cb)
+
+columnView <- function(ent_view)
+{
+  # the column view
+  model <- columnModel(ent_view)
+	colView <- gtkTreeView(model)
+	colView$setRulesHint(TRUE)
+	textColumnsToView(colView, "Column Name", 1)
+  renderer <- gtkCellRendererToggle()
+  renderer$activatable <- TRUE
+  gSignalConnect(renderer, "toggled", visibleRendererToggled_cb, colView)
+  visibleCol <- gtkTreeViewColumn("Visible", renderer, active = 0)
+  colView$insertColumn(visibleCol, 0)
+	colView$setEnableSearch(TRUE)
+	colView$setSearchColumn(1) # search on the name
+  handler <- gSignalConnect(ent_view, "columns-changed", updateColumnView, colView, 
+    user.data.first = TRUE)
+  gSignalConnect(colView, "destroy", 
+    function(col_view) gSignalHandlerDisconnect(ent_view, handler))
+  updateColumnView(colView, ent_view)
+  colView
+}
+
+############## Quick Search Bar ################
+
+updateSearchComboBox <- function(combo, ent_view)
+{
+  active <- combo$active
+  combo$setModel(searchComboModel(ent_view))
+  combo$active <- active
+}
+searchComboModel <- function(ent_view)
+{
+  columns <- ent_view$getColumns()
+  #visible <- columns[sapply(columns, gtkTreeViewColumnGetVisible)]
+  column_names <- sapply(columns, gtkTreeViewColumnGetTitle)
+  df <- data.frame("Column" = column_names, stringsAsFactors=FALSE)
+  # only columns with view titles that match model names are included
+  # FIXME: somehow include color with these?
+  df <- df[(df[,1] %in% colnames(ent_view$getModel())) & df[,1] != "color",,drop=F]
+  rGtkDataFrame(df)
+}
+searchComboChanged_cb <- function(combo, ent_view)
+{
+  #active <- combo$active+2
+  #col <- ent_view$getColumns()[[active]]
+  ind <- match(combo$getModel()[combo$active+1,1], colnames(ent_view$getModel()))
+  ent_view$setSearchColumn(ind-1)
+}
+searchBar <- function(ent_view)
+{
+  columnModel <- searchComboModel(ent_view)
+  columnBox <- gtkComboBox(columnModel)
+  renderer <- gtkCellRendererText()
+  columnBox$packStart(renderer)
+  columnBox$setAttributes(renderer, "text" = 0)
+  handler <- gSignalConnect(ent_view, "columns-changed", updateSearchComboBox, 
+    columnBox, user.data.first = TRUE)
+  gSignalConnect(columnBox, "destroy", 
+    function(columnBox) gSignalHandlerDisconnect(ent_view, handler))
+  gSignalConnect(columnBox, "changed", searchComboChanged_cb, ent_view)
+  columnBox$setActive(1)
+  hbox <- gtkHBox(FALSE, 5)
+  hbox$packStart(gtkLabel("Quick Search:"), FALSE, FALSE, 0)
+  hbox$packStart(columnBox, FALSE, FALSE, 0)
+  if (is.null(gtkCheckVersion(2,10,0))) {
+    entry <- gtkEntry()
+    ent_view$setSearchEntry(entry)
+    hbox$packStart(entry, TRUE, TRUE, 0)
+  }
+  hbox
+}
+
 ### utilities ###
 
 propagateEntityInfo <- function(type = exp_entityType(), rows)
@@ -333,8 +442,12 @@ propagateEntityInfo <- function(type = exp_entityType(), rows)
   #  return()
   entView <- getEntityView(type)
   entModel <- getEntityModel(type)
-  if (missing(rows)) # many/all rows changed, just replace model
+  if (missing(rows)) { # many/all rows changed, just replace model
+    # make sure search column is not lost here
+    search_col <- entView$getSearchColumn()
     entView$setModel(rGtkDataFrame(as.data.frame(entModel[entModel[,1]])))
+    entView$setSearchColumn(search_col)
+  }
   else if (length(rows) > 0) { # map the raw indices to filtered indices
     viewModel <- entView$getModel()
     ents <- entModel[rows,"ID"]
