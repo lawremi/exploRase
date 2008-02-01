@@ -89,13 +89,15 @@ syncDesignInfo <- function() {
 # the design to the experimental data and entity information.
 # @keyword manip
 exp_loadDesign <- function(design_info, ent_type = exp_entityType()) {
+  model <- getDesignModel(ent_type)
+  exp_addEntityType(ent_type)
   # force first column name to be ID
   #if (colnames(design_info)[1] != "ID")
   #  design_info <- cbind(ID=rownames(design_info), design_info)
   #design_model <- designModel(design_info)
   #.exp$setDesignModel(design_model, ent_type)
   #getDesignView()$setModel(design_model)
-	mergeInfo(getDesignModel(ent_type), design_info)
+	mergeInfo(model, design_info)
   projectStarted()
 	#if (sync)
   #  syncDesignInfo()

@@ -111,6 +111,7 @@ exp_loadLists <- function(ent_lists) {
 		  "Entity lists must be bidimensional")
     if (ncol(ent_list) < 2)
       ent_list <- cbind("gene", ent_list)
+    ent_list[,2] <- trimWhiteSpace(ent_list[,2])
 		addEntities(ent_list[,2], ent_list[,1])  # discover any new entities
     tmp_ent_lists <- c(tmp_ent_lists, list(ent_list))
 	}

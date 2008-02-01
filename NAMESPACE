@@ -1,1 +1,3 @@
 exportPattern("^exp")
+
+import("biocola", "rggobi", "RGtk2")

@@ -114,13 +114,12 @@ limmaWindow <- function(parent = getMainWindow())
   hbox$packStart(outputFrame, T, T, 0)
   outputList <- gtkVBox(F, 2)
   outputFrame$add(outputList)
-  outputNames <- c("adj. p-values", "F-statistics")
+  outputOptions <- c("p-values" = TRUE, "F-statistics" = TRUE, 
+    "Coefficients" = FALSE, "Fitted" = FALSE)
+  outputNames <- names(outputOptions)
   outputs <- sapply(outputNames, gtkCheckButton)
-  sapply(outputs, function(output) {
-    output$setActive(T)
-    outputList$packStart(output, F, F, 0)
-  })
-  
+  sapply(outputs, outputList$packStart, F, F, 0)
+  mapply(gtkToggleButtonSetActive, outputs, outputOptions)
   
   limmaAdvanced <- gtkVBox(F, 3)
   advContrastFrame <- gtkFrame("Time contrasts")
@@ -134,7 +133,7 @@ limmaWindow <- function(parent = getMainWindow())
   advPAdjustCombo <- gtkComboBoxNewText()
   advPAdjustFrame$add(advPAdjustCombo)
   sapply(p.adjust.methods, function(method) advPAdjustCombo$appendText(method))
-  advPAdjustCombo$setActive(which(p.adjust.methods == "fdr")-1)
+  advPAdjustCombo$setActive(which(p.adjust.methods == "none")-1)
   
   advanced <- gtkExpander("Advanced")
   advanced$add(limmaAdvanced)
@@ -304,10 +303,21 @@ applyLimma_cb <- function(wid, user_data)
     con_fit <- contrasts.fit(fit, contrast)
     fit_ebayes <- eBayes(con_fit)
     p <- p.adjust(fit_ebayes$F.p.value,method=user_data$pAdjustment$getActiveText())
-    if (outputs["adj. p-values"])
+    browser()
+    if (outputs["p-values"])
       exp_showResults(p, "p", treatment, keyword="limma")
     if (outputs["F-statistics"])
       exp_showResults(fit_ebayes$F, "F", treatment, keyword="limma")
+    if (outputs["Coefficients"])
+      #for(contr_name in colnames(coeffs)) 
+      #  exp_showResults(coeffs[,contr_name], "coeff", contr_name, keyword="limma")
+      exp_showResults(fit_ebayes$coefficients[,1], "coeff", treatment, keyword="limma")
+    if (outputs["Fitted"]) {
+      fitted_vals <- fitted(fit_ebayes)
+      for(sample in colnames(fitted_vals)) 
+        exp_showResults(fitted_vals[,sample], "fitted", 
+          paste(treatment, sample, sep="."), keyword="limma", explorase=FALSE)
+    }
     addProgress(inc)
   }
   
@@ -358,6 +368,7 @@ makeContrastTrt<-function(trt,design)
         contrast.matrix<-cbind(contrast.matrix,temp.contrast)
     }
     rownames(contrast.matrix)<-colnames(design)
+    colnames(contrast.matrix) <- head(names(t.trt),-1)
     return(contrast.matrix)
 }
 

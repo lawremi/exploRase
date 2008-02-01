@@ -32,6 +32,8 @@ entityBookSwitchPage_cb <- function(notebook, page_wid, page_num)
 # @keyword manip
 # @keyword GUI
 exp_addEntityType <- function(ent_type, label = paste(ent_type, "s", sep="")) {
+  if (ent_type %in% names(getEntityTypes()))
+    return()
   .exp$addEntityType(ent_type, label)
   .exp$setDesignModel(designModel(), ent_type)
   entModel <- entityModel()
@@ -237,7 +239,7 @@ function(ent_info, ent_types = "gene", append_col = T, keywords = NULL, update_v
 {
   types <- unique(ent_types)
 	models <- getEntityModels()
-  sapply(types[!(types %in% names(models))], exp_addEntityType)
+  sapply(types, exp_addEntityType)
 	sapply(types[types %in% names(models)], function(ent_type) {
 		old_names <- colnames(models[[ent_type]])
     if (length(ent_types) == 1)

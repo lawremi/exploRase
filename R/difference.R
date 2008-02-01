@@ -169,7 +169,7 @@ exp_calcResiduals <- function(x, y) {
   lm_residuals/as.numeric(sqrt(var(lm_residuals)))
 }
 
-# Caclulate angle distance
+# Calculate angle distance
 # Calculates angle distance between sample vectors \code{x} and \code{y}
 # @arguments normally a column from the experimental data matrix
 # @arguments normally a column from the experimental data matrix

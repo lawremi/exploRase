@@ -5,9 +5,9 @@ mergeInfo <- function(old_info, info, def = NULL)
 {
 	info <- as.data.frame(info)
   
-	# remove white space
-	info[,1] <- gsub(" ", "", as.character(info[,1]))
-	
+	# trim white space
+	info[,1] <- trimWhiteSpace(as.character(info[,1]))
+  
 	colnames(info)[1] <- "ID" # by convention, first column is unique id
 	
   #if (nrow(old_info) == 0) { # this lets us use merge()
