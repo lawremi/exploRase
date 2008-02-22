@@ -56,24 +56,24 @@ designModel <-
 function(design_info = NULL)
 {
   cols <- c("ID" = "character")
-	createDataModel(cols, design_info)
+  createDataModel(cols, design_info)
 }
 
 # adds some samples (microarray chips, metabolite profiles, etc) if they do not yet exist
 addSamples <- function(samples, type) {
   model <- getDesignModel(type)
-	new <- which(!(samples %in% t(model[,"ID"])))
-	if (length(new) > 0) {
-		sample_frame <- data.frame(ID=samples[new])
-		exp_loadDesign(sample_frame, type)
-	}
+  new <- which(!(samples %in% t(model[,"ID"])))
+  if (length(new) > 0) {
+    sample_frame <- data.frame(ID=samples[new])
+    exp_loadDesign(sample_frame, type)
+  }
 }
 
 # remove samples that do not exist
 syncDesignInfo <- function() {
   allowed <- unique(sapply(getDatasets(), function(dataset) {
-		colnames(dataset)
-	}))
+    colnames(dataset)
+  }))
   sapply(getDesignModels(), function(model) {
     samples <- model[,"ID"]
     allowed_samples <- t(samples) %in% allowed

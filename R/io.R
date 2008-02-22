@@ -100,8 +100,13 @@ genPatterns <- function()
   types <- getEntityTypes()
   type_names <- names(types)
   types <- sub("s$", "", types)
-  p <- paste("*", c(paste(type_names, "data", sep="."), paste(type_names, "info", sep="."),
-    paste(type_names, "design", sep="."), "list", "net"), sep=".")
+  p <- paste("*", c(paste(type_names, "data", sep="."),
+                    paste(type_names, "info", sep="."),
+                    paste(type_names, "design", sep="."), "list"),
+             sep=".")
+  common <- paste("*", c("csv", "txt"), sep = ".")
+  p <- lapply(p, function(glob) c(glob, common))
+  p <- c(p, list(paste("*", c("net", "sbml", "xml"), sep = ".")))
   p_names <- c(paste(types, "data"), paste(types, "annotations"), 
     paste(types, "exp. design"), "Entities of interest", "SBML Network")
   names(p) <- p_names
@@ -109,28 +114,38 @@ genPatterns <- function()
 }
 
 MnuOpenFile_cb <- function(w, u) {
-  chooser <- fileOpenDialog("Open exploRase File", genPatterns())
+  patterns <- genPatterns()
+  chooser <- fileOpenDialog("Open exploRase File", patterns)
   chooser$setSelectMultiple(T) 
   if (chooser$run() == GtkResponseType["accept"]) {
-    exp_loadFiles(unlist(chooser$getFilenames()))
+    pattern <- patterns[[chooser$getFilter()$getName()]]
+    data_type <- entity_type <- NULL
+    if (!is.null(pattern)) {
+      exts <- findExtensions(pattern[1])
+      entity_type <- exts[1]
+      data_type <- exts[2]
+    }
+    exp_loadFiles(unlist(chooser$getFilenames()), data_type, entity_type)
   }
   chooser$destroy()
 }
 
 # just for convenience - adds a cancel and open button to dialog
 # this also accepts a set of patterns to convert to filters
-fileOpenDialog <- function(title, patterns = c(All = "*"), parent = getMainWindow())
+fileOpenDialog <- function(title, patterns = c(All = "*"),
+                           parent = getMainWindow())
 {
-	d <- gtkFileChooserDialog(title, parent, "open", "gtk-cancel", GtkResponseType["cancel"],
-		"gtk-open", GtkResponseType["accept"])
+  d <- gtkFileChooserDialog(title, parent, "open",
+                            "gtk-cancel", GtkResponseType["cancel"],
+                            "gtk-open", GtkResponseType["accept"])
   all_filter <- gtkFileFilterNew()
   all_filter$setName("All types")
+  sapply(unique(unlist(patterns)), all_filter$addPattern)
   d$addFilter(all_filter)
   sapply(names(patterns), function(name) {
     filter <- gtkFileFilterNew()
     filter$setName(name)
-    filter$addPattern(patterns[[name]])
-    all_filter$addPattern(patterns[[name]])
+    sapply(patterns[[name]], filter$addPattern)
     d$addFilter(filter)
   })
   d
@@ -183,14 +198,14 @@ formatCheck <- function(d, type = "matrix") {
 # @arguments The entity type (by default: "gene", "met", "prot"),
 # only used if \code{data_type} is specified.
 # @keyword IO
-exp_loadFiles <- function(filenames, data_type, entity_type = "gene")
+exp_loadFiles <- function(filenames, data_type = NULL, entity_type = "gene")
 {
   dirs <- file.info(filenames)[,"isdir"]
   sapply(filenames[dirs], exp_loadProject)
   filenames <- filenames[!dirs]
   if (length(filenames) == 0)
     return()
-  if (missing(data_type))
+  if (is.null(data_type))
     file_matrix <- cbind(filenames, t(sapply(filenames, findExtensions)))
   else file_matrix <- cbind(filenames, entity_type, data_type)
   printTask("Loading files")

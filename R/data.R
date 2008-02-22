@@ -120,9 +120,11 @@ function(wid, user_data)
 applyByReps <- 
 function(fun, ..., ent_type = exp_entityType(), progress = 100) 
 {
-  data_set <- exp_dataset(ent_type)
   trueFactors <- !(exp_designFactors(ent_type) %in% c("ID", "replicate"))
-  trueDesign <- exp_designFrame(ent_type)[,trueFactors]
+  design <- exp_designFrame(ent_type)
+  trueSamples <- !is.na(design[,"replicate"])
+  trueDesign <- design[trueSamples,trueFactors]
+  data_set <- exp_dataset(ent_type)[,design[trueSamples, "ID"]]
   ints <- interaction(trueDesign)
   levs <- levels(ints)[unique(ints)]
   inc <- progress / length(levels(ints))

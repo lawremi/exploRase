@@ -264,7 +264,7 @@ function (exp_data = NULL, entity_info = NULL, design_info = NULL, type = "gene"
     }
     
     if (!is.null(exp_data)) { # experimental data
-        exp_loadData(exp_data)
+        exp_loadData(exp_data, ent_type = type)
     }
     
     # networks would be loaded here...
