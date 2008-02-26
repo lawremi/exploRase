@@ -114,8 +114,9 @@ limmaWindow <- function(parent = getMainWindow())
   hbox$packStart(outputFrame, T, T, 0)
   outputList <- gtkVBox(F, 2)
   outputFrame$add(outputList)
-  outputOptions <- c("p-values" = TRUE, "F-statistics" = TRUE, 
-    "Coefficients" = FALSE, "Fitted" = FALSE)
+  outputOptions <- c("p-values" = TRUE, "cor-p-values" = FALSE,
+                     "F-statistics" = TRUE, "Coefficients" = FALSE,
+                     "Fitted" = FALSE)
   outputNames <- names(outputOptions)
   outputs <- sapply(outputNames, gtkCheckButton)
   sapply(outputs, outputList$packStart, F, F, 0)
@@ -133,7 +134,7 @@ limmaWindow <- function(parent = getMainWindow())
   advPAdjustCombo <- gtkComboBoxNewText()
   advPAdjustFrame$add(advPAdjustCombo)
   sapply(p.adjust.methods, function(method) advPAdjustCombo$appendText(method))
-  advPAdjustCombo$setActive(which(p.adjust.methods == "none")-1)
+  advPAdjustCombo$setActive(which(p.adjust.methods == "fdr")-1)
   
   advanced <- gtkExpander("Advanced")
   advanced$add(limmaAdvanced)
@@ -302,9 +303,13 @@ applyLimma_cb <- function(wid, user_data)
     printOp("Fitting contrasts for ", treatment)
     con_fit <- contrasts.fit(fit, contrast)
     fit_ebayes <- eBayes(con_fit)
-    p <- p.adjust(fit_ebayes$F.p.value,method=user_data$pAdjustment$getActiveText())
     if (outputs["p-values"])
-      exp_showResults(p, "p", treatment, keyword="limma")
+      exp_showResults(fit_ebayes$F.p.value, "p", treatment, keyword="limma")
+    if (outputs["cor-p-values"]) {
+      p.cor <- p.adjust(fit_ebayes$F.p.value,
+                        method = user_data$pAdjustment$getActiveText())
+      exp_showResults(p.cor, "p.cor", treatment, keyword="limma")
+    }
     if (outputs["F-statistics"])
       exp_showResults(fit_ebayes$F, "F", treatment, keyword="limma")
     if (outputs["Coefficients"])

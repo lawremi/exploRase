@@ -6,7 +6,7 @@ MnuSaveEntityInfo_cb<- function(w, u = NULL)
   if (chooser$run() == GtkResponseType["accept"]) {
     type <- exp_entityType()
     filename <- chooser$getFilename()
-    filename <- ensureExt(filename, type, "info")
+    filename <- ensureExt(filename, type, "info", "csv")
     write.table(unloadInfo(), filename, row.names=F, sep=",")
   }
   chooser$destroy()
@@ -23,7 +23,9 @@ MnuSaveEntityLists_cb <- function(w, u) {
     else list_names <- getListNames()
     sapply(list_names, function(name) {
       ent_list <- getListMatrix(name)
-      write.csv(ent_list, paste(file.path(folder, name), "list", sep="."), row.names=F)
+      write.csv(ent_list,
+                paste(file.path(folder, name), "list", "csv", sep="."),
+                row.names=F)
     })
   }
   chooser$destroy()
@@ -54,25 +56,32 @@ MnuSaveProject_cb <- function(w, u) {
     inc <- 25 / length(which(getNumEntities() > 0))
     sapply(exp_entityTypes()[getNumEntities() > 0], function(ent_type) {
       printOp("Saving", ent_type, "info")
-      write.csv(unloadInfo(ent_type), paste(info_prefix, ent_type, "info", sep="."), row.names=F)
+      write.csv(unloadInfo(ent_type),
+                paste(info_prefix, ent_type, "info", "csv", sep="."),
+                row.names=F)
       addProgress(inc)
     })
     printOp("Saving entity lists")
     sapply(getListNames(), function(name) {
       ent_list <- getListMatrix(name)
-      write.csv(ent_list, paste(file.path(folder, name), "list", sep="."), row.names=F)
+      write.csv(ent_list,
+                paste(file.path(folder, name), "list", "csv", sep="."),
+                row.names=F)
     })
     addProgress(25)
     gg <- exp_ggobi()
     sapply(names(gg), function(name) {
       printOp("Saving", name, "data")
-      write.csv(gg[name], paste(file.path(folder, name), "data", sep="."), row.names=T)
+      write.csv(gg[name],
+                paste(file.path(folder, name), "data", "csv", sep="."),
+                row.names=T)
       addProgress(inc)
     })
     sapply(exp_entityTypes()[getNumEntities() > 0], function(ent_type) {
       printOp("Saving", ent_type, "exp. design info")
-      write.csv(exp_designFrame(ent_type), paste(info_prefix, ent_type, 
-        "design", sep="."), row.names=F)
+      write.csv(exp_designFrame(ent_type),
+                paste(info_prefix, ent_type, "design", "csv", sep="."),
+                row.names=F)
       addProgress(inc)
     })
     finishTask()
@@ -103,7 +112,7 @@ genPatterns <- function()
   p <- paste("*", c(paste(type_names, "data", sep="."),
                     paste(type_names, "info", sep="."),
                     paste(type_names, "design", sep="."), "list"),
-             sep=".")
+             "csv", sep=".")
   common <- paste("*", c("csv", "txt"), sep = ".")
   p <- lapply(p, function(glob) c(glob, common))
   p <- c(p, list(paste("*", c("net", "sbml", "xml"), sep = ".")))

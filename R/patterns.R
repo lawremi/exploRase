@@ -134,6 +134,7 @@ updateButton_cb <- function(w, info)
 {
   findAndShowPatterns(info$samples, exp_dataset(info$ent_type), 
     info$scale$getValue() / 100)
+  info$find_button["sensitive"] <- TRUE
 }
 
 findPatternWindow <- function(timeSet, type, pattern_col, parent = .exp$getMainWindow()) {
@@ -153,6 +154,12 @@ findPatternWindow <- function(timeSet, type, pattern_col, parent = .exp$getMainW
     cutoffScale <- gtkVScale(min = 0, max = 100, step = 1)
     cutoffScale$setValue(33)
     cutoffScale$setInverted(TRUE)
+    gSignalConnect(cutoffScale, "value-changed",
+                   function(range)
+                   {
+                     findButton["sensitive"] <- FALSE
+                     updateButton["sensitive"] <- TRUE
+                   })
     
     ##--------Layout Table----------
     layoutTable <- gtkTable(7,1+length(timeSet)*2,TRUE)
@@ -171,26 +178,26 @@ findPatternWindow <- function(timeSet, type, pattern_col, parent = .exp$getMainW
     upFixed$put(upLabel,5,17)
     upFixed$put(upArrow,40,17)
         
-		downLabel<- gtkLabel("Down")
+    downLabel<- gtkLabel("Down")
     downArrow <- gtkArrow("down")
     downArrow$setSizeRequest(15,15)
     downFixed <- gtkFixed()
     downFixed$put(downLabel,5,17)
     downFixed$put(downArrow,40,17)
         
-		rightLabel <- gtkLabel("Same")
+    rightLabel <- gtkLabel("Same")
     rightArrow <- gtkArrow("right")
     rightArrow$setSizeRequest(15,15)
     rightFixed <- gtkFixed()
     rightFixed$put(rightLabel,5,17)
     rightFixed$put(rightArrow,40,17)
         
-		arrowBox$packStart(upFixed)
+    arrowBox$packStart(upFixed)
     arrowBox$packStart(rightFixed)
     arrowBox$packStart(downFixed)
         
-		if(length(timeSet)*2 >3) 
-			buttonWidth <-4
+    if(length(timeSet)*2 >3) 
+      buttonWidth <-4
     else buttonWidth <-2
 
     layoutTable$attach(timeLabel,0,1,0,1)
@@ -233,8 +240,10 @@ findPatternWindow <- function(timeSet, type, pattern_col, parent = .exp$getMainW
       list(buttons = buttons, ent_type = type, column = pattern_col))
     
     updateButton <- gtkButton(stock="gtk-refresh")
+    updateButton["sensitive"] <- FALSE
     gSignalConnect(updateButton, "clicked", updateButton_cb, 
-      list(scale = cutoffScale, samples = timeSet, ent_type = type))
+      list(scale = cutoffScale, samples = timeSet, ent_type = type,
+           find_button = findButton))
     
     buttonBox <- gtkHButtonBox()
     buttonBox$setLayout("edge")
