@@ -135,6 +135,7 @@ updateButton_cb <- function(w, info)
   findAndShowPatterns(info$samples, exp_dataset(info$ent_type), 
     info$scale$getValue() / 100)
   info$find_button["sensitive"] <- TRUE
+  w["sensitive"] <- FALSE
 }
 
 findPatternWindow <- function(timeSet, type, pattern_col, parent = .exp$getMainWindow()) {
