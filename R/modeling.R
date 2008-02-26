@@ -115,8 +115,8 @@ limmaWindow <- function(parent = getMainWindow())
   outputList <- gtkVBox(F, 2)
   outputFrame$add(outputList)
   outputOptions <- c("p-values" = TRUE, "cor-p-values" = FALSE,
-                     "F-statistics" = TRUE, "Coefficients" = FALSE,
-                     "Fitted" = FALSE)
+                     "F-statistics" = TRUE, "coefficients" = FALSE,
+                     "fitted" = FALSE)
   outputNames <- names(outputOptions)
   outputs <- sapply(outputNames, gtkCheckButton)
   sapply(outputs, outputList$packStart, F, F, 0)
@@ -312,11 +312,11 @@ applyLimma_cb <- function(wid, user_data)
     }
     if (outputs["F-statistics"])
       exp_showResults(fit_ebayes$F, "F", treatment, keyword="limma")
-    if (outputs["Coefficients"])
+    if (outputs["coefficients"])
       #for(contr_name in colnames(coeffs)) 
       #  exp_showResults(coeffs[,contr_name], "coeff", contr_name, keyword="limma")
       exp_showResults(fit_ebayes$coefficients[,1], "coeff", treatment, keyword="limma")
-    if (outputs["Fitted"]) {
+    if (outputs["fitted"]) {
       fitted_vals <- fitted(fit_ebayes)
       for(sample in colnames(fitted_vals)) 
         exp_showResults(fitted_vals[,sample], "fitted", 
