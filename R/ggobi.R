@@ -23,36 +23,39 @@ exp_ggobi <- function() {
 # @arguments the color index (as interpreted by GGobi) for the entities
 # @keyword GUI
 # @keyword dynamic
-exp_colorEntities <- function(entities = getEntityIds(), color) {
+exp_colorEntities <- function(entities = getEntityIds(),
+                              color = toGGobiColor(exp_brushColor())) {
   gg <- exp_ggobi() 
-  sapply(exp_entityTypes(), function(ent_type) {
-		dataset <- .exp$getGobisets()[[ent_type]]
-    if (!is.null(dataset)) {
-      ent_ind <- which(rownames(dataset) %in% entities)
-      colors <- glyph_color(dataset)
-      colors[ent_ind] <- color
-      glyph_color(dataset) <- colors
-    }
-	})
-	updateColors(entities)
+  sapply(exp_entityTypes(),
+         function(ent_type) {
+           dataset <- .exp$getGobisets()[[ent_type]]
+           if (!is.null(dataset)) {
+             ent_ind <- which(rownames(dataset) %in% entities)
+             colors <- glyph_color(dataset)
+             colors[ent_ind] <- color
+             glyph_color(dataset) <- colors
+           }
+         })
+  updateColors(entities)
 }
 
 # Updates the Entity Info model with the colors from GGobi
 # Eventually callbacks will do this automatically
 updateColors <- function(entities = getEntityIds(), types = exp_entityTypes()) {
 	models <- getEntityModels()
-	sapply(types, function(ent_type) {
-		model_entities <- getEntityIds(ent_type)
-		#entities <- entities[entities %in% model_entities]
-		entities_ind <- match(entities, model_entities)
-		entities_ind <- entities_ind[!is.na(entities_ind)]
-		entities <- model_entities[entities_ind]
-		ggobi_colors <- getGGobiEntityColors(entities)
-		colors <- getGGobiColors()[ggobi_colors]
-		if (length(colors) > 0)
-			models[[ent_type]][entities_ind,"color"] <- unlist(colors)
-    propagateEntityInfo(ent_type, entities_ind)
-	})
+	sapply(types,
+               function(ent_type) {
+                 model_entities <- getEntityIds(ent_type)
+                 #entities <- entities[entities %in% model_entities]
+                 entities_ind <- match(entities, model_entities)
+                 entities_ind <- entities_ind[!is.na(entities_ind)]
+                 entities <- model_entities[entities_ind]
+                 ggobi_colors <- getGGobiEntityColors(entities)
+                 colors <- getGGobiColors()[ggobi_colors]
+                 if (length(colors) > 0)
+                   models[[ent_type]][entities_ind,"color"] <- unlist(colors)
+                 propagateEntityInfo(ent_type, entities_ind)
+               })
 }
 
 getGGobiColors <- function() .exp$getGGobiColors()
@@ -79,18 +82,18 @@ toGGobiColor <- function(color)
 }
 
 getGGobiEntityColors <- function(entities = getEntityIds()) {
-	gg <- exp_ggobi()
+  gg <- exp_ggobi()
   colors <- rep(.backgroundColor, length(entities))
-	names(colors) <- entities
-	sapply(exp_entityTypes(), function(ent_type) {
-		dataset <- .exp$getGobisets()[[ent_type]]
+  names(colors) <- entities
+  sapply(exp_entityTypes(), function(ent_type) {
+    dataset <- .exp$getGobisets()[[ent_type]]
     if (!is.null(dataset)) {
       ids <- rownames(dataset)
       ggobi_ind <- match(entities, ids)
       colors[ids[ggobi_ind]] <<- glyph_color(dataset)[ggobi_ind]
     }
-	})
-	colors
+  })
+  colors
 }
 
 addGGobiVariable <- function(values, var_name, ent_type = exp_entityType()) {

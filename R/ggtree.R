@@ -192,9 +192,12 @@ color.click.dn <- function( c.hclust, ids, data, .gobi=ggobi_get() )
   descendants <- search.merge(dex)
   #exp_colorEntities(ids, .backgroundColor)
   #setColors.ggobi(colors = rep(7, nrow(data)), which = show.help[high.list,1],.data="expression.GG")
-  exp_colorEntities(ids[descendants], 1)
+  exp_colorEntities(ids[descendants])
   #setColors.ggobi(colors = rep(1, length(descendants)), 
   #                  which = show.help[high.list,1][descendants],.data="expression.GG")
+
+  # update ggtree plot
+  setup.gobidend(c.hclust)
   }
   
   .dend.coords <- function( c.hclust )
@@ -243,7 +246,8 @@ color.click.dn <- function( c.hclust, ids, data, .gobi=ggobi_get() )
   c.lk <- tmp$c.lk
 
   plot(rbind(c.xy, c.cl), type="n", axes=FALSE, xlab="", ylab="")
-  points(c.xy)
+  color <- getGGobiColors()[getGGobiEntityColors(c.hclust$labels)]
+  points(c.xy, col = toupper(color), pch = 19)
   lines(c.lk)
   tmp <- seq(2, 4*(c.n-1) - 2, by=4)
   points(c.lk[tmp,] , pch=15)

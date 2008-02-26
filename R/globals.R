@@ -18,6 +18,7 @@
   .ggobi <- NULL # the GGobi instance
   .filterModels <- NULL # the models holding filter rules for each type
   .statusbar <- NULL # the bar at the bottom of the screen for progress reporting
+  .brushArea <- NULL # the filled rectangle in the brush button
   
   list(
     getGGobiColors = function() .ggobiColors,
@@ -73,6 +74,9 @@
     
     getStatusbar = function() .statusbar,
     setStatusbar = function(statusbar) .statusbar <<- statusbar,
+
+    getBrushArea = function() .brushArea,
+    setBrushArea = function(brushArea) .brushArea <<- brushArea,
     
     clear = function() {
       .ggobiColors <<- .tooltips <<- mainWindow <<- .entityBook <<- NULL

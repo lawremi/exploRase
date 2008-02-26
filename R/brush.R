@@ -10,12 +10,11 @@ drawColorBox_cb <- function(da, event) {
 }
 
 selectColor_cb <- function(item, data) {
-	data[[1]]$modifyBg("normal", data[[2]])
-	data[[1]]$setData("cur-color", data[[2]])
+  setBrushColor(data)
 }
 
 colorBtn_cb <- function(button, da) {
-    exp_colorEntities(exp_entitySelection(), toGGobiColor(da$getData("cur-color")))
+    exp_colorEntities(exp_entitySelection())
 }
 
 # currently clears the color of every entity
@@ -40,7 +39,8 @@ addColorsToMenu <- function(menu, button_da, colors)
 		da$modifyBg("normal", colors[[i]])
 		gSignalConnect(da, "expose_event", drawColorBox_cb)
 		menuItem <- gtkImageMenuItem(names(colors)[i])
-		gSignalConnect(menuItem, "activate", selectColor_cb, list(button_da, colors[[i]]))
+		gSignalConnect(menuItem, "activate", selectColor_cb,
+                               colors[[i]])
 		frm <- gtkFrame()
 		frm$add(da)
 		frm$setShadowType("in")
@@ -67,6 +67,23 @@ colorMenuToolButton <- function(colors) {
   addColorsToMenu(colorMenu, da, colors)
   button$setMenu(colorMenu)
   gSignalConnect(button, "clicked", colorBtn_cb, da)
-  
+
+  button$setData("brush-area", da)
   button
+}
+
+############ Private API ##########
+
+getBrushArea <- function() .exp$getBrushArea()
+
+setBrushColor <- function(color) {
+  da <- getBrushArea()
+  da$modifyBg("normal", color)
+  da$setData("cur-color", color)
+}
+
+############ Public API ###########
+
+exp_brushColor <- function() {
+  getBrushArea()$getData("cur-color")
 }

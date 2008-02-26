@@ -200,6 +200,9 @@ function (exp_data = NULL, entity_info = NULL, design_info = NULL, type = "gene"
     # Add custom brush button to toolbar
     colorBtn <- colorMenuToolButton(getGGobiColors())
     toolBar$insert(colorBtn, 2)
+
+    # Remember the filled area for this button (to get brush color)
+    .exp$setBrushArea(colorBtn$getData("brush-area"))
     
     # Link entity list selection to selection in entity info table
     gSignalConnect(getListView()$getSelection(), "changed", 
