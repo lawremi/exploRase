@@ -6,7 +6,7 @@ MnuSaveEntityInfo_cb<- function(w, u = NULL)
   if (chooser$run() == GtkResponseType["accept"]) {
     type <- exp_entityType()
     filename <- chooser$getFilename()
-    filename <- ensureExt(filename, type, "info", "csv")
+    filename <- ensureExt(filename, type, "info.csv")
     write.table(unloadInfo(), filename, row.names=F, sep=",")
   }
   chooser$destroy()
@@ -24,7 +24,7 @@ MnuSaveEntityLists_cb <- function(w, u) {
     sapply(list_names, function(name) {
       ent_list <- getListMatrix(name)
       write.csv(ent_list,
-                paste(file.path(folder, name), "list", "csv", sep="."),
+                paste(file.path(folder, name), "list.csv", sep="."),
                 row.names=F)
     })
   }
@@ -57,7 +57,7 @@ MnuSaveProject_cb <- function(w, u) {
     sapply(exp_entityTypes()[getNumEntities() > 0], function(ent_type) {
       printOp("Saving", ent_type, "info")
       write.csv(unloadInfo(ent_type),
-                paste(info_prefix, ent_type, "info", "csv", sep="."),
+                paste(info_prefix, ent_type, "info.csv", sep="."),
                 row.names=F)
       addProgress(inc)
     })
@@ -65,7 +65,7 @@ MnuSaveProject_cb <- function(w, u) {
     sapply(getListNames(), function(name) {
       ent_list <- getListMatrix(name)
       write.csv(ent_list,
-                paste(file.path(folder, name), "list", "csv", sep="."),
+                paste(file.path(folder, name), "list.csv", sep="."),
                 row.names=F)
     })
     addProgress(25)
@@ -73,14 +73,14 @@ MnuSaveProject_cb <- function(w, u) {
     sapply(names(gg), function(name) {
       printOp("Saving", name, "data")
       write.csv(gg[name],
-                paste(file.path(folder, name), "data", "csv", sep="."),
+                paste(file.path(folder, name), "data.csv", sep="."),
                 row.names=T)
       addProgress(inc)
     })
     sapply(exp_entityTypes()[getNumEntities() > 0], function(ent_type) {
       printOp("Saving", ent_type, "exp. design info")
       write.csv(exp_designFrame(ent_type),
-                paste(info_prefix, ent_type, "design", "csv", sep="."),
+                paste(info_prefix, ent_type, "design.csv", sep="."),
                 row.names=F)
       addProgress(inc)
     })
@@ -112,7 +112,7 @@ genPatterns <- function()
   p <- paste("*", c(paste(type_names, "data", sep="."),
                     paste(type_names, "info", sep="."),
                     paste(type_names, "design", sep="."), "list"),
-             "csv", sep=".")
+             sep=".")
   common <- paste("*", c("csv", "txt"), sep = ".")
   p <- lapply(p, function(glob) c(glob, common))
   p <- c(p, list(paste("*", c("net", "sbml", "xml"), sep = ".")))
@@ -270,7 +270,9 @@ ggFile <- function(...)
 
 findExtensions <- function(filename)
 {
-  extSplit <- strsplit(basename(filename),"\\.")[[1]]
+  # strip off foreign extensions like '.csv'
+  filename <- sub(".csv$", "", basename(filename))
+  extSplit <- strsplit(filename,"\\.")[[1]]
   extSplit[c(length(extSplit)-1, length(extSplit))]
 }
 
