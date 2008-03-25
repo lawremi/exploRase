@@ -24,7 +24,7 @@ exp_ggobi <- function() {
 # @keyword GUI
 # @keyword dynamic
 exp_colorEntities <- function(entities = getEntityIds(),
-                              color = toGGobiColor(exp_brushColor())) {
+                              color = toGGobiColor(getBrushColor())) {
   gg <- exp_ggobi() 
   sapply(exp_entityTypes(),
          function(ent_type) {

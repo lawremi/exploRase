@@ -79,8 +79,6 @@ temporalWindow <- function(parent = getMainWindow())
 
 limmaWindow <- function(parent = getMainWindow())
 {
-  assert(require(limma), "You need the limma package for this functionality")
-  
   window <- gtkWindow("toplevel", show = F)
   window$setTitle("Linear modeling via Limma")
   window$setTransientFor(parent)

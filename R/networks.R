@@ -1,3 +1,4 @@
+if(FALSE) {
 exp_loadNetwork <- function(sbml, name) {
   # not yet ready for prime-time
   dom <- rsbml_dom(sbml)
@@ -12,4 +13,5 @@ exp_loadNetwork <- function(sbml, name) {
   layout <- new("RColaLayout", g)
   new("RColaGGobiGUI", layout, as.data.frame(species_data), 
     session = .exp$getGGobi(), factories = biocola_gui_constraint_factories)
+}
 }

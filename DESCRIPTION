@@ -1,7 +1,7 @@
 Package: explorase
 Title: GUI for exploratory data analysis of systems biology data
-Version: 1.3.5
-Date: 2008-2-21
+Version: 1.3.6
+Date: 2008-3-25
 Author: Michael Lawrence, Eun-kyung Lee, Dianne Cook, Jihong Kim, Hogeun An, and Dongshin Kim
 Depends: grDevices
 Imports: limma, rggobi, RGtk2

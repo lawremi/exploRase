@@ -82,8 +82,6 @@ setBrushColor <- function(color) {
   da$setData("cur-color", color)
 }
 
-############ Public API ###########
-
-exp_brushColor <- function() {
+getBrushColor <- function() {
   getBrushArea()$getData("cur-color")
 }
