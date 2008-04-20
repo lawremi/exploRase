@@ -399,7 +399,8 @@ exp_showClustering <- function(ids, data, clustering) {
     color.click.dn(clustering, ids, data)
     updateColors()
   }
-  X11(type = "cairo")
+  if (require(cairoDevice))
+    Cairo()
   setup.gobidend(clustering, data)
   win <- ggobiTreeWindow(click_callback)
   win$show()
