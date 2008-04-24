@@ -1,8 +1,9 @@
 Package: explorase
 Title: GUI for exploratory data analysis of systems biology data
-Version: 1.3.6
-Date: 2008-3-25
+Version: 1.3.7
+Date: 2008-4-24
 Author: Michael Lawrence, Eun-kyung Lee, Dianne Cook, Jihong Kim, Hogeun An, and Dongshin Kim
+Depends: R (>= 2.6.2)
 Imports: limma, rggobi, RGtk2
 Suggests: cairoDevice
 Description: explore and analyze *omics data with R and GGobi 

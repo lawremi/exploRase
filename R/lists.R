@@ -23,6 +23,7 @@ listNameEdited_cb <- function(cell, path.string, new.text, model)
     colnames(ent_model)[match(prev_name, colnames(ent_model))] <- new.text
     rows <- updateModelListColumn(ent_model)
     propagateEntityInfo(ent_type, rows)
+    updateFilterColumnBox(ent_type)
   })
 }
 

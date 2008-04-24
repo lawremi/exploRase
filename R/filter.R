@@ -494,7 +494,7 @@ processFilterRule <- function(rule, ent_type)
     if (op == "is not")
       result <- !result
   } else if (op == "satisfies")
-    result <- eval(parse(text=expr), env)
+    result <- eval(parse(text=expr), as.data.frame(ent_model))
   else if (is.factor(column_data) || is.character(column_data)) {
     column_data <- as.character(column_data)
     fixed <- F
