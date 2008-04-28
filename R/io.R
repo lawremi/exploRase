@@ -73,7 +73,7 @@ MnuSaveProject_cb <- function(w, u) {
     sapply(names(gg), function(name) {
       printOp("Saving", name, "data")
       write.csv(gg[name],
-                paste(file.path(folder, name), "data.csv", sep="."),
+                paste(file.path(folder, name), ent_type, "data.csv", sep="."),
                 row.names=T)
       addProgress(inc)
     })
@@ -248,7 +248,7 @@ exp_loadFiles <- function(filenames, data_type = NULL, entity_type = "gene")
     printOp("Loading", ent_type, "data...")
     d <- read.table(f, row.names=1, header=T, check.names = FALSE, sep=",")
     formatCheck(d, "experimental data")
-    exp_loadData(d, sub("\\.data$", "", basename(f)), ent_type)
+    exp_loadData(d, sub("\\.data\\.csv$", "", basename(f)), ent_type)
     addProgress(inc)
   })
   #network_files <- file_matrix[file_matrix[,3] == "net",1]
