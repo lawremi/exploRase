@@ -277,8 +277,6 @@ applyLimma_cb <- function(wid, user_data)
     "Model over-specified, please select a different (larger) set of conditions")
   model_matrix <- model.matrix(~0+ints)[,table(ints) > 0]
   
-  # across all samples for now
-  
   printTask("Limma")
   printOp("Fitting linear models")
   fit<-lmFit(dataset, model_matrix)
@@ -362,6 +360,7 @@ getInteractingTerms <- function(int, terms, sep = "\\*")
 
 makeContrastTrt<-function(trt,design)
 {   t.trt<-table(trt)
+    t.trt <- t.trt[t.trt > 0] # drop unrepresented levels, not in model.matrix
     contrast.matrix<-NULL
     for(i in 1:(length(t.trt)-1))
     {   temp.contrast<-rep(0,length(trt))
