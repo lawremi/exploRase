@@ -246,7 +246,7 @@ exp_loadFiles <- function(filenames, data_type = NULL, entity_type = "gene")
   sapply(data_files, function(f) {
     ent_type <- as.character(file_matrix[f, 2])
     printOp("Loading", ent_type, "data...")
-    d <- read.table(f, row.names=1, header=T, check.names = FALSE, sep=",")
+    d <- read.csv(f, row.names=1, header=TRUE, check.names = FALSE)
     formatCheck(d, "experimental data")
     exp_loadData(d, sub("\\.data\\.csv$", "", basename(f)), ent_type)
     addProgress(inc)
@@ -259,6 +259,7 @@ exp_loadFiles <- function(filenames, data_type = NULL, entity_type = "gene")
   #  addProgress(inc)
   #})
   clearTask()
+  setEntityType(as.character(file_matrix[1,2]))
 }
 
 ######################## Utilities #########################
