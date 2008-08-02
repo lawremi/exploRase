@@ -27,13 +27,12 @@ listNameEdited_cb <- function(cell, path.string, new.text, model)
   })
 }
 
-# here we just get the selected entity list and "highlight" its ents
+# get the selected entity lists and "highlight" their ents
 listSelectRow_cb <- function(treeselection, user.data)
 {
-	entity_list <- exp_listSelection()
-
-	if (length(entity_list) > 0) 		# now highlight the list
-		highlightList(entity_list[[1]])
+  entity_list <- exp_listSelection()
+  getEntityView()$getSelection()$unselectAll()
+  sapply(entity_list, highlightList)
 }
 
 listDoubleClick_cb <- function(listView, event, user_data)
@@ -53,11 +52,12 @@ listDoubleClick_cb <- function(listView, event, user_data)
 
 listView <- function(listModel)
 {
-	listView <- gtkTreeView(listModel)
+  listView <- gtkTreeView(listModel)
   col_names <- "name"
   textColumnsToView(listView, col_names, editors = list(listNameEdited_cb))
   #gSignalConnect(listView, "button-press-event", listDoubleClick_cb)
-	listView
+  listView$getSelection()$setMode("multiple")
+  listView
 }
 
 getListView <- function() .exp$getListView()
@@ -111,7 +111,7 @@ exp_loadLists <- function(ent_lists) {
 		assert(length(dim(ent_list)) == 2 && dim(ent_list)[2] > 0, 
 		  "Entity lists must be bidimensional")
     if (ncol(ent_list) < 2)
-      ent_list <- cbind("gene", ent_list)
+      ent_list <- cbind(type=rep("gene", nrow(ent_list)), ent_list)
     ent_list[,2] <- trimWhiteSpace(ent_list[,2])
 		addEntities(ent_list[,2], ent_list[,1])  # discover any new entities
     tmp_ent_lists <- c(tmp_ent_lists, list(ent_list))

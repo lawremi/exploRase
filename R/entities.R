@@ -391,6 +391,7 @@ columnView <- function(ent_view)
   gSignalConnect(colView, "destroy", 
     function(col_view) gSignalHandlerDisconnect(ent_view, handler))
   updateColumnView(colView, ent_view)
+  colView$setSizeRequest(-1, 200)
   colView
 }
 
