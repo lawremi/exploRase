@@ -14,8 +14,12 @@
 # experimental data. If \code{sync} is \code{TRUE}, the entity
 # information and experimental design tables will be limited to the observations
 # and conditions, respectively, in the experimental data. This is experimental.
+# @arguments whether to add variables in data to experimental design if missing
 # @keyword manip
-exp_loadData <- function(exp_data, data_name = "expression", ent_type = "gene", sync = F) {
+exp_loadData <- function(exp_data, data_name = "expression", ent_type = "gene",
+                         sync = FALSE,
+                         add_to_design = !nrow(exp_designFrame(ent_type)))
+{
   assert(length(dim(exp_data)) == 2, "Experimental data must be bidimensional")
   
   exp_addEntityType(ent_type)
@@ -34,7 +38,8 @@ exp_loadData <- function(exp_data, data_name = "expression", ent_type = "gene", 
 	}
 	
 	# ensure experiments in experimental data are listed
-	addSamples(colnames(exp_data), ent_type)
+  if (add_to_design)
+    addSamples(colnames(exp_data), ent_type)
 	
 	# ensure entities in experimental data are listed
 	addEntities(rownames(exp_data), rep(ent_type, nrow(exp_data)))
@@ -58,6 +63,10 @@ getDatasets <- function() .exp$getDatasets()
 # @value a GGobi dataset, see rggobi documentation.
 # @keyword manip
 exp_dataset <- function(ent_type = exp_entityType()) getDatasets()[[ent_type]]
+
+# convenience for getting a data.frame of the experimental data
+exp_dataFrame <- function(ent_type = exp_entityType())
+  as.data.frame(exp_dataset(ent_type))
 
 #################### Data menu callbacks #####################
 

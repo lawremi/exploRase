@@ -204,7 +204,7 @@ exp_calcMahalanobisDist <- function(ent_data) {
 exp_calcEuclideanDist <- function(ent_data, ent) {
     select.x<-ent_data[ent,]
     select.x<-matrix(rep(1,nrow(ent_data)),ncol=1)%*%as.matrix(select.x)
-    Edist<-sqrt(apply((select.x-ent_data)*(select.x-ent_data),1,sum))
+    Edist<-sqrt(rowSums((select.x-ent_data)^2))
     Edist
 }
 

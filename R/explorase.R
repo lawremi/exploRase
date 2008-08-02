@@ -257,6 +257,7 @@ function (exp_data = NULL, entity_info = NULL, design_info = NULL, type = "gene"
     factory$addDefault()
       
     #### Load any data passed at startup ####
+
     
     if (!is.null(entity_info)) { # entity information
         exp_loadInfo(entity_info, type)
@@ -265,9 +266,11 @@ function (exp_data = NULL, entity_info = NULL, design_info = NULL, type = "gene"
     if (!is.null(design_info)) { # experimental design information
         exp_loadDesign(design_info, type)
     }
-    
-    if (!is.null(exp_data)) { # experimental data
-        exp_loadData(exp_data, ent_type = type)
+
+    if (is(exp_data, "ExpressionSet")) {
+      exp_loadExpressionSet(exp_data, type)
+    } else if (!is.null(exp_data)) { # experimental data
+      exp_loadData(exp_data, ent_type = type)
     }
     
     # networks would be loaded here...

@@ -1,0 +1,34 @@
+* Multiple datasets
+** TODO Move "type" concept to a "dataset" concept
+** TODO Type information becomes annotation on dataset
+* More graphics
+** TODO MA plots
+* Context-sensitive help
+** TODO Set up a wiki with biologist input
+** TODO Add tooltips with link to wiki page
+* Networks
+** TODO ID mapping
+** TODO Layout
+** TODO Linking mechanism
+* Genomic visualization
+* Clustering
+We currently support hierarchical clustering on various distance
+metrics. There are other clustering methods, but:
+  * Hierarchical is easy to use (no parameters like k in k-means)
+  * Hierarchical is familiar to biologists
+The need to calculate a pairwise distance matrix is not a serious
+restriction, because:
+  * Often, the entities responding in an experiment are relatively few 
+  * If above is not true, results likely too difficult to interpret
+The tree plot used by exploRase is not the prettiest, but it does
+provide a simple way to brush clusters. Zoom functionality might be
+nice, but then it's not clear if a fine-grain view of clusters would
+even be useful.
+* Filtering
+  * Consider methods in genefilter package.
+* Lists
+  * Integrate with GSEA packages.
+* Misc
+** TODO Test ExpressionSet support
+** TODO Better formatting of numeric data (NA, sigfigs)
+** TODO Set uniform user limits on variables in GGobi  

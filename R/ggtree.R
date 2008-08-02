@@ -13,7 +13,7 @@ ggobiTreeWindow <- function(selectNode_cb, parent = getMainWindow()) {
     box$setSpacing(25)
     box$setLayout("edge")
     box$setBorderWidth(10)
-    b<-gtkButton("Select Node")
+    b<-gtkButton("Brush Node")
     box$add(b)
     gSignalConnect(b, "clicked", selectNode_cb)
     c<-gtkButton("End")

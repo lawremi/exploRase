@@ -97,7 +97,26 @@ exp_loadDesign <- function(design_info, ent_type = exp_entityType()) {
   #design_model <- designModel(design_info)
   #.exp$setDesignModel(design_model, ent_type)
   #getDesignView()$setModel(design_model)
-	mergeInfo(model, design_info)
+  if (is(design_info, "AnnotatedDataFrame")) {
+    pdata <- pData(design_info)
+    design_info <- cbind(ID = rownames(pdata), pdata)
+  }
+
+  ## strip extra ID column
+  id_dup <- apply(design_info, 2, function(col) all(col == design_info[,1]))
+  id_dup[1] <- FALSE
+  id_dup[is.na(id_dup)] <- FALSE
+  design_info <- design_info[,!id_dup,drop=FALSE]
+
+  mergeInfo(model, design_info)
+
+  ## try to add replicate column if missing and we have at least one factor
+  factors <- exp_designFactors(ent_type, TRUE)
+  if (!("replicate" %in% colnames(model)) && length(factors)) {
+    int <- interaction(model[,factors,drop=FALSE])
+    model[,"replicate"] <- unsplit(lapply(table(int), seq_len), int)
+  }
+
   projectStarted()
 	#if (sync)
   #  syncDesignInfo()
@@ -117,7 +136,7 @@ exp_designFrame <- function(ent_type = exp_entityType(), treatments_only = FALSE
 {
   df <- as.data.frame(getDesignModels()[[ent_type]])
   if (treatments_only)
-    df <- df[,!(colnames(df) %in% c(".visible", "ID", "replicate"))]
+    df <- df[,!(colnames(df) %in% c(".visible", "ID", "replicate")),drop=FALSE]
   df
 }
 

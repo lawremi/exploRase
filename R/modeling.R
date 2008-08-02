@@ -98,10 +98,10 @@ limmaWindow <- function(parent = getMainWindow())
   hiddenFactors <- c(".visible", "ID", "replicate")
   factorNames <- factorNames[!(factorNames %in% hiddenFactors)]
   numFactors <- length(factorNames)
-  assert(numFactors > 0, "You have no factors, please load some experimental design information")
-  if (numFactors > 1)
-    factorNames <- c(factorNames, sapply(1:(numFactors-1), function(ind)
-      paste(factorNames[ind], factorNames[(ind+1):numFactors], sep="*")))
+  assert(numFactors > 0,
+         "No factors, please load experimental design information")
+  genInteractions <- function(n) combn(factorNames, n, paste, collapse = "*")
+  factorNames <- unlist(lapply(seq(numFactors), genInteractions))
   factors <- sapply(factorNames, gtkCheckButton)
   sapply(factors, function(factor) {
     factorList$packStart(factor, F, F, 0)
@@ -112,8 +112,8 @@ limmaWindow <- function(parent = getMainWindow())
   hbox$packStart(outputFrame, T, T, 0)
   outputList <- gtkVBox(F, 2)
   outputFrame$add(outputList)
-  outputOptions <- c("p-values" = TRUE, "cor-p-values" = FALSE,
-                     "F-statistics" = TRUE, "coefficients" = FALSE,
+  outputOptions <- c("p-values" = FALSE, "cor-p-values" = TRUE,
+                     "F-statistics" = FALSE, "coefficients" = TRUE,
                      "fitted" = FALSE)
   outputNames <- names(outputOptions)
   outputs <- sapply(outputNames, gtkCheckButton)
@@ -260,7 +260,7 @@ applyLimma_cb <- function(wid, user_data)
     real <- !is.na(design[,"replicate"])
     dataset <- dataset[,real]
     design <- design[real,]
-    selected_conds <- selected_conds[selected_conds %in% rownames(design)]
+    selected_conds <- selected_conds[selected_conds %in% design$ID]
   }
   if (length(selected_conds) > 1) {
     design <- design[match(selected_conds,design[,"ID"]),]
@@ -285,7 +285,7 @@ applyLimma_cb <- function(wid, user_data)
   treatments <- design[!dups, trueFactors, drop=F]
   contrasts <- sapply(user_data$contrasts, gtkToggleButtonGetActive)
   assert(!any(contrasts) || "time" %in% colnames(treatments),
-    "You must have a 'time' variable in your experimental design to find time contrasts")
+    "Fitting time contrasts requires 'time' variable in experimental design")
   
   n_contrasts  <- length(factors)
   if (contrasts["linear"])

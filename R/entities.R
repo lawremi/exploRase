@@ -235,22 +235,30 @@ exp_entitySelection <- function(ent_type = exp_entityType())
 # @keyword manip
 # @keyword GUI
 exp_loadInfo <- 
-function(ent_info, ent_types = "gene", append_col = T, keywords = NULL, update_view = T, sync = F) 
+function(ent_info, ent_types = "gene", append_col = TRUE, keywords = NULL,
+         update_view = TRUE, sync = FALSE) 
 {
+  if (is(ent_info, "AnnotatedDataFrame")) {
+    pdata <- pData(ent_info)
+    if ("ID" %in% colnames(pdata)) ## ID column must be first
+      ent_info <- cbind(ID = pdata$ID,
+                        pdata[,colnames(pdata) != "ID", drop=FALSE])
+    else ent_info <- cbind(ID = rownames(pdata), pdata)
+  }
   types <- unique(ent_types)
-	models <- getEntityModels()
+  models <- getEntityModels()
   sapply(types, exp_addEntityType)
-	sapply(types[types %in% names(models)], function(ent_type) {
-		old_names <- colnames(models[[ent_type]])
+  sapply(types[types %in% names(models)], function(ent_type) {
+    old_names <- colnames(models[[ent_type]])
     if (length(ent_types) == 1)
       info <- ent_info
     else info <- ent_info[which(ent_type == ent_types),]
     loadInfoSubset(info, ent_type, sync)
-		if(update_view) {
-			updateEntityView(ent_type, old_names, append_col, keywords)
+    if(update_view) {
+      updateEntityView(ent_type, old_names, append_col, keywords)
       updateFilterColumnBox(ent_type)
     }
-	})
+  })
   projectStarted()
 }
 
@@ -260,18 +268,19 @@ function(ent_info, ent_types = "gene", append_col = T, keywords = NULL, update_v
 loadInfoSubset <- function(ent_info, ent_type, sync = F) {
   model <- getEntityModel(ent_type)
   
-  def <- list(.visible = T, lists = as.character(NA), color = getGGobiColors()[.backgroundColor])
+  def <- list(.visible = T, lists = as.character(NA),
+              color = getGGobiColors()[.backgroundColor])
   def[getListNames()] <- F
   mergeInfo(model, ent_info, def)
 	
   updateModelListColumn(model)
   propagateEntityInfo(ent_type)
   
-	# If asked, hide entities that are not in experimental data
-	if (sync)
-		syncEntityInfo()
-	
-	TRUE # success
+  ## If asked, hide entities that are not in experimental data
+  if (sync)
+    syncEntityInfo()
+  
+  TRUE # success
 }
 
 # Creates an entity info model with built in columns for the global filter,
