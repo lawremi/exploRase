@@ -21,7 +21,7 @@ exp_featureData <- function(type = exp_entityType()) {
 }
 
 exp_expressionSet <- function(type = exp_entityType()) {
-  new("ExpressionSet", exprs = exp_data(type),
+  new("ExpressionSet", exprs = as.matrix(exp_dataFrame(type)),
       phenoData = exp_phenoData(type),
       featureData = exp_featureData(type))
 }

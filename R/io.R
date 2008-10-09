@@ -70,10 +70,11 @@ MnuSaveProject_cb <- function(w, u) {
     })
     addProgress(25)
     gg <- exp_ggobi()
-    sapply(names(gg), function(name) {
+    datasets <- getDatasets()
+    sapply(names(datasets), function(name) {
       printOp("Saving", name, "data")
-      write.csv(gg[name],
-                paste(file.path(folder, name), ent_type, "data.csv", sep="."),
+      write.csv(datasets[[name]],
+                paste(file.path(folder,"explorase"), name, "data.csv", sep="."),
                 row.names=T)
       addProgress(inc)
     })
