@@ -6,7 +6,7 @@
 \description{
 Loads a data frame of entity metadata into the metadata table of the given type(s).
 }
-\usage{exp_loadInfo(ent_info, ent_types = "gene", append_col = T, keywords = NULL, update_view = T, sync = F)}
+\usage{exp_loadInfo(ent_info, ent_types = "gene", append_col = TRUE, keywords = NULL, update_view = TRUE, sync = FALSE)}
 \arguments{
 \item{ent_info}{the data frame of entity information}
 \item{ent_types}{a single type identifier (applies to all rows) or a}

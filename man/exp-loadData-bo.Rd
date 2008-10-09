@@ -6,7 +6,8 @@
 \description{
 Load experimental data of a specified type into exploRase (and GGobi).
 }
-\usage{exp_loadData(exp_data, data_name = "expression", ent_type = "gene", sync = F)}
+\usage{exp_loadData(exp_data, data_name = "expression", ent_type =
+"gene", sync = FALSE, add_to_design = !nrow(exp_designFrame(ent_type)))}
 \arguments{
 \item{exp_data}{a data frame containing experimental data, with 
 observations as rows and conditions as columns.}
@@ -15,7 +16,10 @@ observations as rows and conditions as columns.}
 \item{sync}{whether to synchronize the other data models with the 
   experimental data. If \code{sync} is \code{TRUE}, the entity
   information and experimental design tables will be limited to the observations
-  and conditions, respectively, in the experimental data. This is experimental.}
+  and conditions, respectively, in the experimental data. This is
+  experimental.}
+\item{add_to_design}{whether to add the columns in the dataset as
+  conditions in the experimental design, if they are not there already}
 }
 
 \details{Organizes experimental data, loads it into GGobi and synchronizes it
