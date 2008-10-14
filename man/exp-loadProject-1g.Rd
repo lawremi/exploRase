@@ -1,7 +1,7 @@
 \name{exp_loadProject}
 \alias{exp_loadProject}
 \title{Load a project}
-\author{Michael Lawrence <lawremi@iastate.edu>}
+\author{Michael Lawrence <mflawren@fhcrc.org>}
 
 \description{
 Loads a project (a file system directory) into exploRase

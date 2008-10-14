@@ -1,7 +1,7 @@
 \name{exp_calcMahalanobisDist}
 \alias{exp_calcMahalanobisDist}
 \title{Calculate Mahalanobis distance}
-\author{Michael Lawrence <lawremi@iastate.edu>}
+\author{Michael Lawrence <mflawren@fhcrc.org>}
 
 \description{
 Calculates mahalanobis distance between the samples (columns) in the data frame \code{ent_data}

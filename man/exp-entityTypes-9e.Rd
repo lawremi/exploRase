@@ -1,7 +1,7 @@
 \name{exp_entityTypes}
 \alias{exp_entityTypes}
 \title{Get all entity types}
-\author{Michael Lawrence <lawremi@iastate.edu>}
+\author{Michael Lawrence <mflawren@fhcrc.org>}
 
 \description{
 Retrieves the identifiers for all entity types in exploRase.

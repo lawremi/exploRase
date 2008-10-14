@@ -1,7 +1,7 @@
 \name{exp_listFrame}
 \alias{exp_listFrame}
 \title{Get entity lists}
-\author{Michael Lawrence <lawremi@iastate.edu>}
+\author{Michael Lawrence <mflawren@fhcrc.org>}
 
 \description{
 Gets the entity lists loaded in exploRase

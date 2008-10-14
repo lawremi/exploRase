@@ -1,7 +1,7 @@
 \name{exp_entityType}
 \alias{exp_entityType}
 \title{Get the current entity type}
-\author{Michael Lawrence <lawremi@iastate.edu>}
+\author{Michael Lawrence <mflawren@fhcrc.org>}
 
 \description{
 Retrieves the entity type with its tab selected in the metadata notebook.

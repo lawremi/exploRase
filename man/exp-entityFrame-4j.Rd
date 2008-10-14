@@ -1,7 +1,7 @@
 \name{exp_entityFrame}
 \alias{exp_entityFrame}
 \title{Get entity metadata}
-\author{Michael Lawrence <lawremi@iastate.edu>}
+\author{Michael Lawrence <mflawren@fhcrc.org>}
 
 \description{
 Retrieves the entity metadata table for the given type as a data frame

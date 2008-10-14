@@ -1,7 +1,7 @@
 \name{exp_showResults}
 \alias{exp_showResults}
 \title{Show analysis results}
-\author{Michael Lawrence <lawremi@iastate.edu>}
+\author{Michael Lawrence <mflawren@fhcrc.org>}
 
 \description{
 Add a column of analysis results to the exploRase table and the GGobi dataset.

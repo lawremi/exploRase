@@ -1,7 +1,7 @@
 \name{exp_listSelection}
 \alias{exp_listSelection}
 \title{Get selected lists}
-\author{Michael Lawrence <lawremi@iastate.edu>}
+\author{Michael Lawrence <mflawren@fhcrc.org>}
 
 \description{
 Gets the names of the lists selected in the exploRase GUI.

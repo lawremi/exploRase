@@ -1,7 +1,7 @@
 \name{exp_addEntityType}
 \alias{exp_addEntityType}
 \title{Add an entity type}
-\author{Michael Lawrence <lawremi@iastate.edu>}
+\author{Michael Lawrence <mflawren@fhcrc.org>}
 
 \description{
 Adds an entity type of the given name with a plural human-readable label.

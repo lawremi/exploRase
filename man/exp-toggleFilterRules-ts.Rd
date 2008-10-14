@@ -1,7 +1,7 @@
 \name{exp_toggleFilterRules}
 \alias{exp_toggleFilterRules}
 \title{Toggle filter rules}
-\author{Michael Lawrence <lawremi@iastate.edu>}
+\author{Michael Lawrence <mflawren@fhcrc.org>}
 
 \description{
 Toggles (activates or deactivates) the specified rules for the specified type.

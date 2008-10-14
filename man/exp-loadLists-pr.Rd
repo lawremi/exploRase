@@ -1,7 +1,7 @@
 \name{exp_loadLists}
 \alias{exp_loadLists}
 \title{Load entity lists}
-\author{Michael Lawrence <lawremi@iastate.edu>}
+\author{Michael Lawrence <mflawren@fhcrc.org>}
 
 \description{
 Loads a list of entity lists (matrices) into exploRase

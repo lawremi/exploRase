@@ -1,7 +1,7 @@
 \name{exp_calcCorrelationDist}
 \alias{exp_calcCorrelationDist}
 \title{Calculate correlation distance}
-\author{Michael Lawrence <lawremi@iastate.edu>}
+\author{Michael Lawrence <mflawren@fhcrc.org>}
 
 \description{
 Calculates correlation distance between \code{ent} and the other entities across

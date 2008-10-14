@@ -1,7 +1,7 @@
 \name{exp_designFactors}
 \alias{exp_designFactors}
 \title{Get the exp. design factors}
-\author{Michael Lawrence <lawremi@iastate.edu>}
+\author{Michael Lawrence <mflawren@fhcrc.org>}
 
 \description{
 Gets a vector of the names of the factors in the experimental design

@@ -1,7 +1,7 @@
 \name{exp_showClustering}
 \alias{exp_showClustering}
 \title{Show a hierarchical clustering}
-\author{Michael Lawrence <lawremi@iastate.edu>}
+\author{Michael Lawrence <mflawren@fhcrc.org>}
 
 \description{
 Shows a hierarchical clustering using the "GGobi" dendrogram viewer.

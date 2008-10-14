@@ -1,7 +1,7 @@
 \name{exp_loadData}
 \alias{exp_loadData}
 \title{Load experimental data}
-\author{Michael Lawrence <lawremi@iastate.edu>}
+\author{Michael Lawrence <mflawren@fhcrc.org>}
 
 \description{
 Load experimental data of a specified type into exploRase (and GGobi).

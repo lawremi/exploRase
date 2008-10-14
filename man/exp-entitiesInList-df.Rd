@@ -1,7 +1,7 @@
 \name{exp_entitiesInList}
 \alias{exp_entitiesInList}
 \title{Get the entities in a list}
-\author{Michael Lawrence <lawremi@iastate.edu>}
+\author{Michael Lawrence <mflawren@fhcrc.org>}
 
 \description{
 Gets the ID's of the entities in a specified list and of the specified types.

@@ -1,7 +1,7 @@
 \name{exp_showPatterns}
 \alias{exp_showPatterns}
 \title{Show patterns}
-\author{Michael Lawrence <lawremi@iastate.edu>}
+\author{Michael Lawrence <mflawren@fhcrc.org>}
 
 \description{
 Show the calculated patterns in the GUI

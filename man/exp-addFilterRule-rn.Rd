@@ -1,7 +1,7 @@
 \name{exp_addFilterRule}
 \alias{exp_addFilterRule}
 \title{Add a filter rule}
-\author{Michael Lawrence <lawremi@iastate.edu>}
+\author{Michael Lawrence <mflawren@fhcrc.org>}
 
 \description{
 Adds a filter rule to the exploRase filter model for the given entity type

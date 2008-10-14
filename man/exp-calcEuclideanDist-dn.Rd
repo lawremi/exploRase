@@ -1,7 +1,7 @@
 \name{exp_calcEuclideanDist}
 \alias{exp_calcEuclideanDist}
 \title{Calculate Euclidean distance}
-\author{Michael Lawrence <lawremi@iastate.edu>}
+\author{Michael Lawrence <mflawren@fhcrc.org>}
 
 \description{
 Calculates Euclidean distance between \code{ent} and the other entities across 

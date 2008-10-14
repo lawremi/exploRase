@@ -1,7 +1,7 @@
 \name{exp_calcZeroCorDist}
 \alias{exp_calcZeroCorDist}
 \title{Calculate zero-correlation distance}
-\author{Michael Lawrence <lawremi@iastate.edu>}
+\author{Michael Lawrence <mflawren@fhcrc.org>}
 
 \description{
 Calculates zero (uncentered) correlation distance between \code{ent} and the

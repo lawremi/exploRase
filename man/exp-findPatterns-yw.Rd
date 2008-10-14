@@ -1,7 +1,7 @@
 \name{exp_findPatterns}
 \alias{exp_findPatterns}
 \title{Find Patterns}
-\author{Michael Lawrence <lawremi@iastate.edu>}
+\author{Michael Lawrence <mflawren@fhcrc.org>}
 
 \description{
 Finds patterns in data. Transitions within range of 'fraction' (centered on median)

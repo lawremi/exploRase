@@ -1,7 +1,7 @@
 \name{exp_entitySelection}
 \alias{exp_entitySelection}
 \title{Get selected entities}
-\author{Michael Lawrence <lawremi@iastate.edu>}
+\author{Michael Lawrence <mflawren@fhcrc.org>}
 
 \description{
 Gets the ID's of the entities selected in the metadata table of the given type.

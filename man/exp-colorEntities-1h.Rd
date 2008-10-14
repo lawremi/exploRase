@@ -1,7 +1,7 @@
 \name{exp_colorEntities}
 \alias{exp_colorEntities}
 \title{Coloring entities}
-\author{Michael Lawrence <lawremi@iastate.edu>}
+\author{Michael Lawrence <mflawren@fhcrc.org>}
 
 \description{
 Set the color for the specified entities of the current entity type in GGobi

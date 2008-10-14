@@ -1,7 +1,7 @@
 \name{exp_calcResiduals}
 \alias{exp_calcResiduals}
 \title{Calculate residuals}
-\author{Michael Lawrence <lawremi@iastate.edu>}
+\author{Michael Lawrence <mflawren@fhcrc.org>}
 
 \description{
 Calculates the residuals from a linear regression of sample \code{y} against sample \code{x}

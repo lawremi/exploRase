@@ -1,7 +1,7 @@
 \name{exp_calcAngleDist}
 \alias{exp_calcAngleDist}
 \title{Caclulate angle distance}
-\author{Michael Lawrence <lawremi@iastate.edu>}
+\author{Michael Lawrence <mflawren@fhcrc.org>}
 
 \description{
 Calculates angle distance between sample vectors \code{x} and \code{y}

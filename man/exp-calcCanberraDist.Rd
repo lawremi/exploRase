@@ -1,7 +1,7 @@
 \name{exp_calcCanberraDist}
 \alias{exp_calcCanberraDist}
 \title{Calculate Canberra distance}
-\author{Michael Lawrence <lawremi@iastate.edu>}
+\author{Michael Lawrence <mflawren@fhcrc.org>}
 
 \description{
 Calculates Canberra distance between \code{ent} and the other entities across

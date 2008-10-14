@@ -1,7 +1,7 @@
 \name{exp_filterRules}
 \alias{exp_filterRules}
 \title{Get filter rules}
-\author{Michael Lawrence <lawremi@iastate.edu>}
+\author{Michael Lawrence <mflawren@fhcrc.org>}
 
 \description{
 Gets the filter rules for the metadata of the given type

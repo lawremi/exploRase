@@ -1,7 +1,7 @@
 \name{exp_newList}
 \alias{exp_newList}
 \title{Create an entity list}
-\author{Michael Lawrence <lawremi@iastate.edu>}
+\author{Michael Lawrence <mflawren@fhcrc.org>}
 
 \description{
 Forms the actual entity list matrix from the name, ents, and types

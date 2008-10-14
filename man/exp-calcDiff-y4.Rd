@@ -1,7 +1,7 @@
 \name{exp_calcDiff}
 \alias{exp_calcDiff}
 \title{Calculate difference}
-\author{Michael Lawrence <lawremi@iastate.edu>}
+\author{Michael Lawrence <mflawren@fhcrc.org>}
 
 \description{
 Just calculates \code{y} - \code{x}. You're probably better off just doing that.

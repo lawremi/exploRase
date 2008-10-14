@@ -1,7 +1,7 @@
 \name{exp_removeFilterRules}
 \alias{exp_removeFilterRules}
 \title{Remove filter rules}
-\author{Michael Lawrence <lawremi@iastate.edu>}
+\author{Michael Lawrence <mflawren@fhcrc.org>}
 
 \description{
 Removes the filter rules with the given identifiers for the given type

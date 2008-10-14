@@ -1,7 +1,7 @@
 \name{exp_designFrame}
 \alias{exp_designFrame}
 \title{Get the exp. design}
-\author{Michael Lawrence <lawremi@iastate.edu>}
+\author{Michael Lawrence <mflawren@fhcrc.org>}
 
 \description{
 Gets a data frame containing the experimental design information for the given entity type.

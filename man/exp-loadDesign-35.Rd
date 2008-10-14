@@ -1,7 +1,7 @@
 \name{exp_loadDesign}
 \alias{exp_loadDesign}
 \title{Load experimental design}
-\author{Michael Lawrence <lawremi@iastate.edu>}
+\author{Michael Lawrence <mflawren@fhcrc.org>}
 
 \description{
 Loads a matrix describing the experimental conditions

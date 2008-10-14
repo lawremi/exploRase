@@ -1,7 +1,7 @@
 \name{exp_loadInfo}
 \alias{exp_loadInfo}
 \title{Load entity metadata}
-\author{Michael Lawrence <lawremi@iastate.edu>}
+\author{Michael Lawrence <mflawren@fhcrc.org>}
 
 \description{
 Loads a data frame of entity metadata into the metadata table of the given type(s).

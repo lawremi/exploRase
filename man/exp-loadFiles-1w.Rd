@@ -1,7 +1,7 @@
 \name{exp_loadFiles}
 \alias{exp_loadFiles}
 \title{Load files}
-\author{Michael Lawrence <lawremi@iastate.edu>}
+\author{Michael Lawrence <mflawren@fhcrc.org>}
 
 \description{
 Loads a set of files into exploRase
