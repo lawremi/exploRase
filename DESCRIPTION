@@ -1,6 +1,6 @@
 Package: explorase
 Title: GUI for exploratory data analysis of systems biology data
-Version: 1.5.4
+Version: 1.6.0
 Date: 2008-10-14
 Author: Michael Lawrence, Eun-kyung Lee, Dianne Cook, Jihong Kim, Hogeun An, and Dongshin Kim
 Depends: R (>= 2.6.2)
