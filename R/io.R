@@ -252,13 +252,13 @@ exp_loadFiles <- function(filenames, data_type = NULL, entity_type = "gene")
     exp_loadData(d, sub("\\.data\\.csv$", "", basename(f)), ent_type)
     addProgress(inc)
   })
-  #network_files <- file_matrix[file_matrix[,3] == "net",1]
-  #inc <- 20 * 1 / length(network_files)
-  #printOp("Loading network data...")
-  #sapply(network_files, function(f) {
-  #  exp_loadNetwork(rsbml_read(f), sub("\\.net$", "", basename(f)))
-  #  addProgress(inc)
-  #})
+  network_files <- file_matrix[file_matrix[,3] == "net",1]
+  inc <- 20 * 1 / length(network_files)
+  printOp("Loading network data...")
+  sapply(network_files, function(f) {
+    exp_loadNetwork(rsbml_read(f), sub("\\.net$", "", basename(f)))
+    addProgress(inc)
+  })
   clearTask()
   setEntityType(as.character(file_matrix[1,2]))
 }

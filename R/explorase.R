@@ -181,8 +181,9 @@ function (exp_data = NULL, entity_info = NULL, design_info = NULL, type = "gene"
            parcoords_cb),
       list("Scatmat", NULL, "_Scatterplot matrix", NULL,
            "Create a scatterplot matrix of the selected samples",
-           scatmat_cb))
-           
+           scatmat_cb),
+      list("MAplot", NULL, "_MAplot", NULL, "Create MAplot", MAplot_cb))
+    
     ag <- gtkActionGroup("exploRaseActions")
     ag$addActions(actionEntries, mainWindow)
     uiManager <- gtkUIManager()
@@ -274,6 +275,8 @@ function (exp_data = NULL, entity_info = NULL, design_info = NULL, type = "gene"
     }
     
     # networks would be loaded here...
+    if (!is.null(network))
+      exp_loadNetwork(network)
     
     if (length(entity_lists) > 0) # entity lists
         exp_loadLists(entity_lists)

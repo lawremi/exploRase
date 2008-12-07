@@ -119,3 +119,27 @@ scatmat_cb <- function(wid, data)
 {
   createGGobiDisplay("Scatterplot Matrix")
 }
+
+MAplot_cb <- function(wid, data)
+{
+  types <- exp_entityType()
+  keyword <- NULL
+  pmode <- "XY Plot"
+  samples <- exp_designSelection()
+  assert(length(samples) == 2, "Please select two samples")
+  samples <- sort(samples)
+  dataset <- exp_dataset()
+  reg_y <- dataset[,samples[2]]
+  reg_x <- dataset[,samples[1]]
+  diff <- exp_calcDiff(reg_x, reg_y)
+  mean <- (reg_x+reg_y)/2
+  mean1 <- createVarName(samples, "mean")
+  diff1 <- createVarName(samples, "diff")
+  addResultColumn(mean, mean1, types, keyword)
+  addGGobiVariable(mean, mean1, types)
+  addResultColumn(diff, diff1, types, keyword)
+  addGGobiVariable(diff, diff1, types)
+  d <- .exp$getGobisets()[[exp_entityType()]]
+  display(d, pmode, list(X=mean1, Y=diff1))
+  finishTask()
+}

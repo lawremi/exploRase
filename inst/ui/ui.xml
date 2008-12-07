@@ -50,6 +50,7 @@
     <menu action='GraphicsMenu'>
       <menuitem action='Parcoords'/>
       <menuitem action='Scatmat'/>
+      <menuitem action='MAplot'/>
     </menu>
   </menubar>
   <toolbar name="ToolBar">
