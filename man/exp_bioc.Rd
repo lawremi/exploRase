@@ -15,7 +15,7 @@ exp_featureData(type = exp_entityType())
 exp_expressionSet(type = exp_entityType())
 }
 \arguments{
-  \item{exprset} { The \code{ExpressionSet} to load. }
+  \item{exprset}{ The \code{ExpressionSet} to load. }
   \item{type}{ The type of the biological entity (e.g. gene). }
 }
 \details{
