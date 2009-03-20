@@ -1,3 +1,4 @@
+if (FALSE) {
 exp_loadNetwork <- function(sbml, name = deparse(substitute(sbml))) {
   ## not yet ready for prime-time
   require(rsbml)
@@ -21,6 +22,7 @@ exp_loadNetwork <- function(sbml, name = deparse(substitute(sbml))) {
   d <- gg[name]
   edges <- g
   edges(gg) <- edges
+}
 }
 
 if(FALSE) {
