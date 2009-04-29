@@ -135,8 +135,10 @@ MnuOpenFile_cb <- function(w, u) {
       entity_type <- exts[1]
       data_type <- exts[2]
     }
-    exp_loadFiles(unlist(chooser$getFilenames()), data_type, entity_type,
-                  quiet = FALSE)
+    err <- try(exp_loadFiles(unlist(chooser$getFilenames()), data_type,
+                             entity_type, ignoreUnknown = FALSE))
+    if (inherits(err, "try-error"))
+      errorDialog(err)
   }
   chooser$destroy()
 }
@@ -210,7 +212,7 @@ formatCheck <- function(d, type = "matrix") {
 # only used if \code{data_type} is specified.
 # @keyword IO
 exp_loadFiles <- function(filenames, data_type = NULL, entity_type = "gene",
-                          quiet = TRUE)
+                          ignoreUnknown = TRUE)
 {
   dirs <- file.info(filenames)[,"isdir"]
   sapply(filenames[dirs], exp_loadProject)
@@ -220,10 +222,9 @@ exp_loadFiles <- function(filenames, data_type = NULL, entity_type = "gene",
   if (is.null(data_type)) {
     exts <- lapply(filenames, findExtensions)
     valid <- sapply(exts, length) == 2L
-    if (!quiet && any(!valid)) {
-      errorDialog("Could not determine data/entity type for file(s):",
-                  paste(basename(filenames[!valid]), collapse = ", "))
-      return()
+    if (!ignoreUnknown && any(!valid)) {
+      stop("Could not determine data/entity type for file(s): ",
+           paste(basename(filenames[!valid]), collapse = ", "), call.=FALSE)
     }
     file_matrix <- cbind(filenames, do.call("rbind", exts[valid]))
   }
