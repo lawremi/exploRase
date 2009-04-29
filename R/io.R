@@ -135,7 +135,8 @@ MnuOpenFile_cb <- function(w, u) {
       entity_type <- exts[1]
       data_type <- exts[2]
     }
-    exp_loadFiles(unlist(chooser$getFilenames()), data_type, entity_type)
+    exp_loadFiles(unlist(chooser$getFilenames()), data_type, entity_type,
+                  quiet = FALSE)
   }
   chooser$destroy()
 }
@@ -208,19 +209,32 @@ formatCheck <- function(d, type = "matrix") {
 # @arguments The entity type (by default: "gene", "met", "prot"),
 # only used if \code{data_type} is specified.
 # @keyword IO
-exp_loadFiles <- function(filenames, data_type = NULL, entity_type = "gene")
+exp_loadFiles <- function(filenames, data_type = NULL, entity_type = "gene",
+                          quiet = TRUE)
 {
   dirs <- file.info(filenames)[,"isdir"]
   sapply(filenames[dirs], exp_loadProject)
   filenames <- filenames[!dirs]
   if (length(filenames) == 0)
     return()
-  if (is.null(data_type))
-    file_matrix <- cbind(filenames, t(sapply(filenames, findExtensions)))
+  if (is.null(data_type)) {
+    exts <- lapply(filenames, findExtensions)
+    valid <- sapply(exts, length) == 2L
+    if (!quiet && any(!valid)) {
+      errorDialog("Could not determine data/entity type for file(s):",
+                  paste(basename(filenames[!valid]), collapse = ", "))
+      return()
+    }
+    file_matrix <- cbind(filenames, do.call("rbind", exts[valid]))
+  }
   else file_matrix <- cbind(filenames, entity_type, data_type)
+  rownames(file_matrix) <- file_matrix[,1]
   printTask("Loading files")
-  printOp("Loading entity lists...")
-  exp_loadLists(lapply(file_matrix[file_matrix[,3] == "list",1], read.csv, row.names = NULL))
+  list_files <- file_matrix[file_matrix[,3] == "list",1]
+  if (length(list_files)) {
+    printOp("Loading entity lists...")
+    exp_loadLists(lapply(list_files, read.csv, row.names = NULL))
+  }
   addProgress(20)
   info_files <- file_matrix[file_matrix[,3] == "info",1]
   inc <- 20 * 1 / length(info_files)
@@ -252,13 +266,13 @@ exp_loadFiles <- function(filenames, data_type = NULL, entity_type = "gene")
     exp_loadData(d, sub("\\.data\\.csv$", "", basename(f)), ent_type)
     addProgress(inc)
   })
-  network_files <- file_matrix[file_matrix[,3] == "net",1]
-  inc <- 20 * 1 / length(network_files)
-  printOp("Loading network data...")
-  sapply(network_files, function(f) {
-    exp_loadNetwork(rsbml_read(f), sub("\\.net$", "", basename(f)))
-    addProgress(inc)
-  })
+  ## network_files <- file_matrix[file_matrix[,3] == "net",1]
+  ## inc <- 20 * 1 / length(network_files)
+  ## printOp("Loading network data...")
+  ## sapply(network_files, function(f) {
+  ##   exp_loadNetwork(rsbml_read(f), sub("\\.net$", "", basename(f)))
+  ##   addProgress(inc)
+  ## })
   clearTask()
   setEntityType(as.character(file_matrix[1,2]))
 }
@@ -275,7 +289,7 @@ findExtensions <- function(filename)
   # strip off foreign extensions like '.csv'
   filename <- sub(".csv$", "", basename(filename))
   extSplit <- strsplit(filename,"\\.")[[1]]
-  extSplit[c(length(extSplit)-1, length(extSplit))]
+  tail(extSplit, 2)
 }
 
 ensureExt <- function(filename, ...)
