@@ -103,11 +103,17 @@ exp_loadDesign <- function(design_info, ent_type = exp_entityType()) {
   }
 
   ## strip extra ID column
-  id_dup <- apply(design_info, 2, function(col) all(col == design_info[,1]))
-  id_dup[1] <- FALSE
-  id_dup[is.na(id_dup)] <- FALSE
-  design_info <- design_info[,!id_dup,drop=FALSE]
+  ## id_dup <- apply(design_info, 2, function(col) all(col == design_info[,1]))
+  ## id_dup[1] <- FALSE
+  ## id_dup[is.na(id_dup)] <- FALSE
+  ## design_info <- design_info[,!id_dup,drop=FALSE]
 
+  ## strip any column not the ID column with all unique values
+  uni <- apply(design_info, 2,
+               function(x) length(unique(x)) == nrow(design_info))
+  uni[1] <- FALSE
+  design_info <- design_info[,!uni]
+  
   mergeInfo(model, design_info)
 
   ## try to add replicate column if missing and we have at least one factor
