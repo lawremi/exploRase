@@ -48,7 +48,8 @@ exp_addEntityType <- function(ent_type, label = paste(ent_type, "s", sep="")) {
     gtkLabel(label))
 }
 
-setEntityType <- function(ent_type, turn_page = T) {
+setEntityType <- function(ent_type, turn_page = TRUE) {
+  exp_addEntityType(ent_type) # make sure it is a valid type
   w <- match(ent_type, exp_entityTypes())
   book <- .exp$getEntityBook()
   if (turn_page && w-1 != book$getCurrentPage())

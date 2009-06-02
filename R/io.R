@@ -275,7 +275,9 @@ exp_loadFiles <- function(filenames, data_type = NULL, entity_type = "gene",
   ##   addProgress(inc)
   ## })
   clearTask()
-  setEntityType(as.character(file_matrix[1,2]))
+  typed_files <- file_matrix[file_matrix[,3] != "list",]
+  if (nrow(typed_files))
+    setEntityType(as.character(typed_files[1,2]))
 }
 
 ######################## Utilities #########################

@@ -15,7 +15,9 @@ MnuExit_cb <- function(w, event, should_quit = F)
 ####################### GtkTreeView utilities ########################
 
 # gets the values in cols for selected rows in a TreeView
-getSelectedData <- function(treeView, cols = 1:treeView$getModel()$getNColumns()) {
+getSelectedData <-
+  function(treeView, cols = seq_len(treeView$getModel()$getNColumns()))
+{
   model <- treeView$getModel()
   treesel <- treeView$getSelection()
 	rows <- treesel$getSelectedRows()$retval

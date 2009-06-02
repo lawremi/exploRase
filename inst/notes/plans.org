@@ -2,7 +2,7 @@
 ** TODO Move "type" concept to a "dataset" concept
 ** TODO Type information becomes annotation on dataset
 * More graphics
-** TODO MA plots
+** DONE MA plots
 * Context-sensitive help
 ** TODO Set up a wiki with biologist input
 ** TODO Add tooltips with link to wiki page
@@ -29,6 +29,6 @@ even be useful.
 * Lists
   * Integrate with GSEA packages.
 * Misc
-** TODO Test ExpressionSet support
+** DONE Test ExpressionSet support
 ** TODO Better formatting of numeric data (NA, sigfigs)
 ** TODO Set uniform user limits on variables in GGobi  
