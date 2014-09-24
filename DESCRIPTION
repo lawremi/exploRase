@@ -1,12 +1,12 @@
 Package: explorase
 Title: GUI for exploratory data analysis of systems biology data
-Version: 1.29.1
+Version: 1.29.2
 Author: Michael Lawrence, Eun-kyung Lee, Dianne Cook, Jihong Kim, Hogeun An, and Dongshin Kim
 Depends: R (>= 2.6.2)
 Imports: limma, rggobi, RGtk2
 Suggests: cairoDevice
 Description: explore and analyze *omics data with R and GGobi 
-Maintainer: Michael Lawrence <mflawren@fhcrc.org>
+Maintainer: Michael Lawrence <michafla@gene.com>
 License: GPL-2
 URL: http://www.metnetdb.org/MetNet_exploRase.htm
 biocViews: Visualization,Microarray,GUI

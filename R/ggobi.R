@@ -67,7 +67,9 @@ toGdkColors <- function(colors)
 		# to hex string representation
 		paste("#", paste(as.raw(round(color * 255)), collapse=""), sep="")
 	})
-  color_table <- read.table(ggFile("colors", "rgb.txt"), header=T)
+  color_table <- read.table(system.file("colors", "rgb.txt",
+                                        package="explorase"),
+                            header=TRUE)
   names(text_colors) <- sapply(colors, function(color) {
     as.character(color_table[sort.list(apply(abs(t(255*color - t(color_table[,1:3]))),
       1, sum))[1],4])

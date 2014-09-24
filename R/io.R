@@ -282,11 +282,6 @@ exp_loadFiles <- function(filenames, data_type = NULL, entity_type = "gene",
 
 ######################## Utilities #########################
 
-ggFile <- function(...)
-{
-	file.path(path.package("explorase"), ...)
-}
-
 findExtensions <- function(filename)
 {
   # strip off foreign extensions like '.csv'

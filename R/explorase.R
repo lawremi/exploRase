@@ -194,7 +194,7 @@ function (exp_data = NULL, entity_info = NULL, design_info = NULL, type = "gene"
     
     #### Create UI for actions ####
     
-    uiManager$addUiFromFile(ggFile("ui", "ui.xml"))
+    uiManager$addUiFromFile(system.file("ui", "ui.xml", package="explorase"))
     menuBar <- uiManager$getWidget("/MenuBar")
     toolBar <- uiManager$getWidget("/ToolBar")
     
